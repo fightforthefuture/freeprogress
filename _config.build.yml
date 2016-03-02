@@ -1,0 +1,17 @@
+######################
+# Config: Production #
+######################
+
+#############
+# Meta info #
+#############
+
+url: https://www.freeprogress.org
+
+#############
+# Compiling #
+#############
+
+future: false
+show_drafts: false
+production: true

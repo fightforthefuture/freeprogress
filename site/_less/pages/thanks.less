@@ -1,0 +1,131 @@
+.thanks .center-box {
+  color: @black;
+  padding-top: 2rem;
+  text-align: center;
+  h2 {
+    font-size: 3.2rem;
+  }
+}
+
+.sig {
+  padding: 0 1rem;
+  margin-bottom: 2.4rem;
+
+  @media screen and (min-width: @small-phone) {
+    padding: 0 3rem;
+  }
+
+  &::before {
+    background-image: url('/images/heart.png');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    content: '';
+    display: inline-block;
+    height: 2.6rem;
+    position: relative;
+    top: 0.7rem;
+    width: 2.4rem;
+  }
+  li {
+    display: inline;
+    line-height: 1.4;
+    &::after {
+      content: ',';
+    }
+    &:nth-last-child(2) {
+      &::after {
+        content: ' &';
+      }
+    }
+    &:last-child {
+      &::after {
+        content: '';
+      }
+    }
+  }
+}
+
+.cta {
+  margin-bottom: 2rem;
+}
+
+.share {
+  display: flex;
+  font-weight: 600;
+  justify-content: center;
+  margin-bottom: 2rem;
+
+  a {
+    background-position: 1rem center;
+    background-repeat: no-repeat;
+    background-size: 2.4rem 2.4rem;
+    border-radius: 0.5rem;
+    color: white;
+    display: block;
+    margin: 0 1rem;
+    padding: 1rem 2rem 1rem 4rem;
+    transition: background-color 200ms;
+    width: 12.5rem;
+    &:link, &:visited, &:hover, &:active, &:focus {
+      text-decoration: none;
+    }
+  }
+}
+
+.photo {
+  display: block;
+}
+
+.facebook {
+  background-color: #39579a;
+  background-image: url('/images/fb_white.png');
+  &:hover, &:active {
+    background-color: darken(#39579a, 10%);
+  }
+}
+
+.twitter {
+  background-color: #02aced;
+  background-image: url('/images/tw_white.png');
+  margin-right: 2rem;
+  &:hover, &:active {
+    background-color: darken(#02aced, 10%);
+  }
+}
+
+.social {
+  align-items: center;
+  background-color: #4a677b;
+  color: white;
+  display: flex;
+  justify-content: center;
+  padding: 1.6rem 0;
+
+  h3 {
+    color: @white;
+  }
+}
+
+.fb, .tw {
+  background-repeat: no-repeat;
+  background-position: center center;
+  border: 0;
+  color: transparent;
+  display: inline-block;
+  font: 0/0 a;
+  height: 3rem;
+  margin-left: 0.8rem;
+  text-align: center;
+  text-shadow: none;
+  vertical-align: sub;
+  width: 3rem;
+}
+
+.fb {
+  background-image: url('/images/social_facebook.png');
+}
+
+.tw {
+  background-image: url('/images/social_twitter.png');
+}

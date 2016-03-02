@@ -1,0 +1,50 @@
+#################################################
+# Config: Development                           #
+#################################################
+# (production settings go in _config.build.yml) #
+
+#############
+# Meta info #
+#############
+
+name: Free Progress
+description: "Free Progress allows you to A/B test social share links. For free."
+url: http://0.0.0.0:9002
+timezone: America/New_York
+googleanalytics: UA-26576645-1
+favicon: '/favicon.ico'
+pathlead: '' # use this if you need a leading slash or directory on asset paths
+
+author:
+    googleid: 102356128596404327231
+    twitterid: 382376904
+    twitter: fightfortheftr
+
+#############
+# Authoring #
+#############
+
+future: true
+show_drafts: true
+permalink: /:categories/:title/ # See Jekyll documentation for permalink styles
+
+defaults:
+  -
+    scope:
+      path: ''
+    values:
+      layout: 'default'
+
+
+#############
+# Compiling #
+#############
+
+exclude:       ['images', 'js', 'css']
+keep_files:    ['images', 'js', 'css']
+
+highlighter: rouge
+markdown: kramdown
+kramdown:
+  smart_quotes: ["apos", "apos", "quot", "quot"]
+#  input: GFM

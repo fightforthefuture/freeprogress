@@ -1,0 +1,43 @@
+.talker-container {
+  margin-bottom: 0;
+  padding: 0 2rem;
+  + .center-box {
+    .frequency input[type="radio"] {
+      top: 37%;
+    }
+    .frequency-toggle label {
+      height: auto;
+      padding: 2.5rem 0 2.5rem 1.5rem;
+    }
+  }
+}
+
+.talker {
+  position: relative;
+  img {
+    position: absolute;
+    top: -0.4rem;
+    width: 8.8rem;
+    height: auto;
+    left: -2rem;
+    @media screen and (min-width: @small-phone) {
+      position: absolute;
+      top: -2.7rem;
+      width: 10rem;
+      height: auto;
+      left: -2rem;
+    }
+  }
+  figcaption {
+    background-color: rgba(0, 0, 0, 0.35);
+    border-radius: 1rem 1rem 0 0;
+    color: #ffffff;
+    font-size: 1.5rem;
+    padding: 1rem 1rem 1rem 5rem;
+    text-align: center;
+    @media screen and (min-width: @small-phone) {
+      padding: 1rem 2rem 1rem 6.5rem;
+    }
+  }
+}
+

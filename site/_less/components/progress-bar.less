@@ -1,0 +1,115 @@
+.theme (@theme) {
+  background-image: linear-gradient(-45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0.2) 75%, transparent 75%, transparent), linear-gradient(to right, @green-200, @blue-400);
+  background-size: 5rem 5rem, 100%;
+}
+
+.theme (@theme) when (@theme = 'holiday') {
+  background-image: linear-gradient(-45deg, @heart 33%, @white 33%, @white 65%, @heart 66%);
+  background-size: 2.9rem 1.7rem;
+}
+
+// So this is *really* weird. If you comma-separate the two pseudo-classes
+// below, it breaks for both webkit/blink and moz. Why. WHY.
+.progress-bar-styles(@progress-bar-theme) {
+  &::-webkit-progress-value {
+    .theme(@progress-bar-theme);
+    border-radius: 0.5rem;
+  }
+  &::-moz-progress-bar {
+    .theme(@progress-bar-theme);
+    border-radius: 0.5rem;
+  }
+}
+
+.progress-container {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  figcaption {
+    align-items:center;
+    color: @white;
+    display: flex;
+    font-size: 2rem;
+    justify-content: space-between;
+    // why does this have a left margin?
+    // what was i thinking. / ab
+    //margin-left: 0.5rem;
+    text-align: right;
+  }
+}
+
+.progress-bar-border {
+  background: rgba(0, 0, 0, 0.35);
+  line-height: 0;
+  width: 100%;
+}
+
+.progress-bar {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  width: 100%;
+  .progress-bar-styles('standard');
+
+  &::-webkit-progress-bar {
+    background-color: transparent;
+  }
+  .progress-bar-styles('default');
+  &.eoy {
+    .progress-bar-styles('holiday');
+  }
+}
+
+.total-goal {
+  font-size: 1.8rem;
+  line-height: 0.75;
+  text-align: center;
+  text-transform: lowercase;
+
+  .stats + & {
+    line-height: inherit;
+    @media screen and (min-width: @small-phone) {
+      font-size: 1.8rem;
+    }
+    strong {
+      display: block;
+    }
+  }
+}
+
+.stats {
+  color: @green-100;
+  font-size: 1.6rem;
+  margin-right: 1rem;
+  min-width: 14.5rem;
+  text-align: left;
+}
+
+.stat-delimiter {
+  color: @white;
+  font-size: 1rem;
+  position: relative;
+  top: -0.2rem;
+}
+
+.skinny {
+  display: block;
+
+  .progress-bar-border {
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .progress-bar {
+    height: 1rem;
+  }
+}
+
+.inset {
+  .progress-bar-border {
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+  }
+}

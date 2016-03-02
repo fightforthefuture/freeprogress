@@ -1,0 +1,62 @@
+.social-links {
+  @media screen and (min-width: @small-phone) {
+    align-items: baseline;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  @media screen and (min-width: @large-phone) {
+    display: block;
+  }
+  @media screen and (min-width: @large-tablet) {
+    display: flex;
+  }
+  h3 {
+    min-width: 14rem;
+  }
+}
+
+.social-block {
+  background-position: 7% center;
+  background-repeat: no-repeat;
+  background-size: auto 75%;
+  border-radius: 0.5rem;
+  color: white;
+  display: inline-block;
+  font-size: 1.8rem;
+  font-variant: small-caps;
+  height: 5rem;
+  width: 47%;
+  padding: 1.6rem 0;
+  text-indent: 5rem;
+  transition: background-color 200ms;
+  @media screen and (min-width: @small-phone) {
+    width: 32%;
+  }
+  @media screen and (min-width: @large-phone) {
+    width: 47%;
+  }
+  @media screen and (min-width: @small-tablet) {
+    text-align: center;
+    text-indent: 0;
+  }
+  @media screen and (min-width: @large-tablet) {
+    text-align: left;
+    text-indent: 5rem;
+    width: 32%;
+  }
+  &:hover, &:active {
+    text-decoration: none;
+  }
+  &.twitter {
+    margin-right: 1rem;
+    @media screen and (min-width: @small-phone) {
+      margin-right: 2rem;
+    }
+    @media screen and (min-width: @large-phone) {
+      margin-right: 1rem;
+    }
+    @media screen and (min-width: @large-tablet) {
+      margin-right: 2rem;
+    }
+  }
+}

@@ -1,0 +1,85 @@
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: @background-color;
+  font-size: 62.5%;
+}
+
+body {
+  background-color: @background-color;
+  background: linear-gradient(to bottom, @blue-300 0%, @blue-800 100%);
+  color: #a4c6db;
+  // For testing fallback fonts:
+  //font-family: sans-serif;
+  //font-family: Arial;
+  //font-family: Corbel;
+  //font-family: "Open Sans";
+  //font-family: "Proxima Nova";
+  //font-family: "proxima-nova";
+  //-------------------------
+  font-family: @body-font;
+  font-size: 1.6rem;
+  font-weight: 400;
+  height: 100%;
+  padding: 3rem 1.5rem 0;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: greyscale;
+
+  & > * {
+    margin: 0 auto 2rem;
+    max-width: 45rem;
+  }
+  .stripe_checkout_app, .modal-parent {
+    max-width: 100%;
+    margin: auto;
+  }
+}
+
+a {
+  color: #bfe5fd;
+  &:link, &:visited {
+    text-decoration: none;
+  }
+  &:hover, &:active, &:focus {
+    text-decoration: underline;
+  }
+}
+
+button, label {
+  cursor: pointer;
+}
+
+h2 {
+  color: #4a677b;
+  font-weight: 600;
+  margin: 0 1.5rem 1rem;
+}
+
+h3 {
+  color: #2f6478;
+  font-size: 1.75rem;
+  font-weight: 300;
+}
+
+img {
+  height: auto;
+  max-width: 100%;
+}
+
+strong {
+  font-weight: 600;
+}
+
+.hidden {
+  display: none;
+}
+
+.visually-hidden {
+  color: transparent;
+  height: 0;
+  visibility: hidden;
+}

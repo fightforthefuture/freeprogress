@@ -1,0 +1,8 @@
+node_modules/
+vendor/
+.env
+*.sublime-*
+core.js
+*.css
+*.map
+public/
