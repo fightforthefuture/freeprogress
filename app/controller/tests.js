@@ -22,6 +22,8 @@ var getTestForUrl = function(req, res) {
     if (err)
       return error.json(res, err.ref, err.data)
 
+    console.log('HERE IS YOUR RESPONSE LOL: ', site);
+
     res.json('bolo');
   });
 }

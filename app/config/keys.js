@@ -4,7 +4,7 @@ Habitat.load('.env');
 
 var
   env = new Habitat('', {
-    port: 3019
+    port: 9002
   });
 
 module.exports = {

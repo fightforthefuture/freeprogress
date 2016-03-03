@@ -52,7 +52,8 @@
     "pg": "^4.5.1",
     "request": "^2.36.0",
     "sequelize": "^3.19.3",
-    "stripe": "^4.0.0"
+    "stripe": "^4.0.0",
+    "url-parse": "^1.0.5"
   },
   "devDependencies": {
     "grunt-concurrent": "^2.0.3",

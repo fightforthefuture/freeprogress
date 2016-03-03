@@ -6,3 +6,4 @@ core.js
 *.css
 *.map
 public/
+npm-debug.log
