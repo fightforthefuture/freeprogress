@@ -18,7 +18,9 @@ var getTestForUrl = function(req, res) {
   if (!url)
     return error.json(res, 'TESTS_BAD_URL');
 
-  model.tests.Site.getSiteFromURL(url, function(err, site) {
+  console.log(model.Site);
+
+  model.Site.getSiteFromURL(url, function(err, site) {
     if (err)
       return error.json(res, err.ref, err.data)
 

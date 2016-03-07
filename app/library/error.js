@@ -3,6 +3,10 @@ module.exports = {
     'msg':  'An internal server error has occurred.',
     'code': 500
   },
+  USER_UNAUTHORIZED: {
+    'msg':  'Access denied.',
+    'code': 401
+  },
   TESTS_BAD_URL: {
     'msg':  'An invalid URL was passed.',
     'code': 400

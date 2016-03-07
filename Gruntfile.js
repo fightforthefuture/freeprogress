@@ -101,7 +101,6 @@ module.exports = function (grunt) {
     concat: {
       options: {
         sourceMap: true,
-        separator: grunt.util.linefeed + ';'
       },
       scripts: {
         options: {
@@ -113,9 +112,15 @@ module.exports = function (grunt) {
         files: [
           {
             src: [
-              '<%= site.app %>/_js/main.js'
+              '<%= site.app %>/_js/admin/library/composer-1.1.12.min.js',
+              '<%= site.app %>/_js/admin/library/util.js',
+              '<%= site.app %>/_js/admin/library/api.js',
+              '<%= site.app %>/_js/admin/controller/**/*.js',
+              '<%= site.app %>/_js/admin/model/*.js',
+              '<%= site.app %>/_js/admin/view/**/*.js',
+              '<%= site.app %>/_js/admin.js'
             ],
-            dest: '<%= site.dist %>/js/core.js'
+            dest: '<%= site.dist %>/js/admin.js'
           },
           {
             src: [
@@ -137,6 +142,7 @@ module.exports = function (grunt) {
         files: {
           '<%= site.dist %>/js/core.js': '<%= site.dist %>/js/core.js',
           '<%= site.dist %>/js/client.js': '<%= site.dist %>/js/client.js',
+          '<%= site.dist %>/js/admin.js': '<%= site.dist %>/js/admin.js',
         }
       }
     },
@@ -166,7 +172,8 @@ module.exports = function (grunt) {
       },
       javascript: {
         files: [
-          '<%= site.app %>/_js/**/*.js'
+          '<%= site.app %>/_js/**/*.js',
+          '<%= site.app %>/_js/admin/*.js',
         ],
         tasks: ['concat:scripts']
       },

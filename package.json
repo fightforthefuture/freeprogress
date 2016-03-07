@@ -26,6 +26,7 @@
   "repository": "fightforthefuture/freeprogress",
   "dependencies": {
     "autoprefixer": "^6.0.0",
+    "basic-auth": "^1.0.3",
     "body-parser": "^1.2.2",
     "compression": "^1.6.0",
     "connect-redis": "^3.0.0",

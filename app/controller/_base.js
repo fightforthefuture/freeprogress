@@ -1,13 +1,16 @@
+var sites       = require('./sites');
+var static       = require('./static');
 var tests       = require('./tests');
-var site       = require('./site');
 
 var _init = function(model) {
+    sites._init(model);
+    static._init(model);
     tests._init(model);
-    site._init(model);
 }
 
 module.exports = {
   _init: _init,
-  tests: tests,
-  site: site
+  sites: sites,
+  static: static,
+  tests: tests
 };

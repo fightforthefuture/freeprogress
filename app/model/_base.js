@@ -1,12 +1,26 @@
 var Sequelize   = require('sequelize');
+var site        = require('./site');
+var page        = require('./page');
 var tests       = require('./tests');
 
 var _init = function(db) {
-    var sequelize = _initDB(db);
+    var sequelize               = _initDB(db);
+    module.exports._sequelize   = sequelize;
+    module.exports._dbPrefix    = db.prefix;
 
-    tests._init(db.prefix, sequelize);
+    _export(site);
+    _export(page);
+    _export(tests);
 
     sequelize.sync();
+}
+
+var _export = function(model) {
+  model._init(module.exports);
+
+  for (var exportable in model)
+    if (model.hasOwnProperty(exportable))
+      module.exports[exportable] = model[exportable];
 }
 
 var _initDB = function(db) {
@@ -27,6 +41,5 @@ var _initDB = function(db) {
 }
 
 module.exports = {
-  _init: _init,
-  tests: tests
+  _init:      _init
 };
