@@ -13,7 +13,10 @@ var _init = function(baseModel) {
 var getSites = function(req, res) {
   res.set('Access-Control-Allow-Origin', '*');
 
-  res.json(['site lol']);
+  model.Site.findAll({order: [['host', 'ASC']]}).then(function(sites) {
+    console.log('sites: ', sites);
+    res.json({sites: sites});
+  });
 }
 
 module.exports = {

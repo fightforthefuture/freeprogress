@@ -49,5 +49,36 @@ var api = {
     xhr.open("get", url+query, true);
     this.auth(xhr);
     xhr.send();
+  },
+
+  post: function(url, params, callback) {
+    this._call(url, params, callback, 'post');
+  },
+
+  delete: function(url, params, callback) {
+    this._call(url, params, callback, 'delete');
+  },
+
+  _call: function(url, params, callback, method) {
+
+    var data = new FormData();
+
+    for (var param in params)
+      if (params.hasOwnProperty(param))
+        data.append(param, params[param]);
+
+    var xhr = new XMLHttpRequest();
+
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4) {
+        if (xhr.status != 200)
+          return callback(this.error(xhr), null)
+
+        return callback(null, JSON.parse(xhr.response));
+      }
+    }.bind(this);
+    xhr.open(method, url, true);
+    this.auth(xhr);
+    xhr.send(data);
   }
 }

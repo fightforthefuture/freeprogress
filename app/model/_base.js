@@ -2,9 +2,17 @@ var Sequelize   = require('sequelize');
 var site        = require('./site');
 var page        = require('./page');
 var tests       = require('./tests');
+var AWS         = require('aws-sdk');
 
-var _init = function(db) {
+var util        = {
+  config: {}
+};
+
+var _init = function(db, aws) {
     var sequelize               = _initDB(db);
+    util.AWS                    = _initAWS(aws);
+
+    module.exports._util        = util;
     module.exports._sequelize   = sequelize;
     module.exports._dbPrefix    = db.prefix;
 
@@ -38,6 +46,19 @@ var _initDB = function(db) {
             }
         }
     );
+}
+
+var _initAWS = function(aws) {
+  AWS.config.update({
+      accessKeyId: aws.access_key,
+      secretAccessKey: aws.secret_key
+  });
+  util.config.aws = {
+    s3_bucket: aws.s3_bucket,
+    s3_folder: aws.s3_folder
+  };
+
+  return AWS;
 }
 
 module.exports = {

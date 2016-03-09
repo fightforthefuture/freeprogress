@@ -19,5 +19,11 @@ module.exports = {
     port:   env.get('db').port,
     prefix: env.get('db').prefix
   },
-  port: env.get('port')
+  port: env.get('port'),
+  aws: {
+    access_key: env.get('aws').access_key,
+    secret_key: env.get('aws').secret_key,
+    s3_bucket:  env.get('aws').s3_bucket,
+    s3_folder:  env.get('aws').s3_folder
+  }
 };

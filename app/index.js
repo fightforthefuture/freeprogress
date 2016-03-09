@@ -12,7 +12,7 @@ var model = require('./model/_base');
 var controller = require('./controller/_base');
 var routes = require('./config/routes');
 
-model._init(keys.db);             // Initialize model from db config
+model._init(keys.db, keys.aws);   // Initialize model from db, aws config
 controller._init(model);          // Initialize controller from model
 
 var auth = require('./library/auth')(model);

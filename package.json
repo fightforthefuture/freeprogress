@@ -26,6 +26,7 @@
   "repository": "fightforthefuture/freeprogress",
   "dependencies": {
     "autoprefixer": "^6.0.0",
+    "aws-sdk": "^2.2.42",
     "basic-auth": "^1.0.3",
     "body-parser": "^1.2.2",
     "compression": "^1.6.0",
@@ -48,11 +49,14 @@
     "grunt-jekyll": "^0.4.2",
     "grunt-postcss": "^0.7.1",
     "habitat": "^3.1.2",
+    "image-type": "^2.1.0",
     "jit-grunt": "^0.9.1",
+    "multiparty": "^4.1.2",
     "node-jsdom": "^3.1.5",
     "pg": "^4.5.1",
     "request": "^2.36.0",
     "sequelize": "^3.19.3",
+    "sha1": "^1.1.1",
     "stripe": "^4.0.0",
     "url-parse": "^1.0.5"
   },

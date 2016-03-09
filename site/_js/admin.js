@@ -1,7 +1,7 @@
 (function (doc, win) {
   "use strict";
 
-  new SitesController({
+  new SiteListController({
     inject: '#admin'
   });
 

@@ -41,8 +41,11 @@ var _init = function(baseModel) {
         getSiteFromURL: function(url, callback) {
           var parsedUrl = new URL(url);
 
-          if (!parsedUrl.host || !parsedUrl.pathname)
+          if (!parsedUrl.host)
             return callback({ref: 'TESTS_BAD_URL', data: url}, null);
+
+          if (!parsedUrl.pathname)
+            parsedUrl.pathname = '/';
 
           var query = {
             where: {host: parsedUrl.host},

@@ -5,12 +5,12 @@ var Sites = Composer.Collection.extend({
 
   populate: function() {
 
-    api.get('/sites', {}, function(err, sites) {
+    api.get('/sites', {}, function(err, result) {
       if (err)
         return alert(err.msg);
 
-      console.log('sites:', sites);
-    });
+      this.reset(result.sites);
+    }.bind(this));
     return this;
   }
 });
