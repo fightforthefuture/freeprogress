@@ -12,14 +12,16 @@ template.setDefaults({
 
 var _routes = {
   'GET:/': 'getTestForUrl',
+  'GET:/click_variation_tw': 'clickVariationTW',
+  'GET:/click_variation_fb': 'clickVariationFB',
+  'POST:/share_variation_tw': 'shareVariationTW',
+  'POST:/share_variation_fb': 'shareVariationFB',
   '!GET:/variation_tws': 'getVariationTWs',
   '!POST:/variation_tw': 'saveVariationTW',
   '!DELETE:/variation_tw': 'deleteVariationTW',
   '!GET:/variation_fbs': 'getVariationFBs',
   '!POST:/variation_fb': 'saveVariationFB',
   '!DELETE:/variation_fb': 'deleteVariationFB',
-  'GET:/click_variation_tw': 'clickVariationTW',
-  'GET:/click_variation_fb': 'clickVariationFB',
 }
 
 var _init = function(baseModel) {
@@ -38,6 +40,10 @@ methods.deleteVariationTW = function(req, res) {
   _baseSaveVariation(req, res, model.VariationTW);
 }
 
+methods.shareVariationTW = function(req, res) {
+  _baseShareVariation(req, res, model.VariationTW);
+};
+
 methods.clickVariationTW = function(req, res) {
   _baseClickVariation(req, res, model.VariationTW, 'variation_tw');
 };
@@ -53,6 +59,10 @@ methods.saveVariationFB = function(req, res) {
 methods.deleteVariationFB = function(req, res) {
   _baseDeleteVariation(req, res, model.VariationFB);
 }
+
+methods.shareVariationFB = function(req, res) {
+  _baseShareVariation(req, res, model.VariationFB);
+};
 
 methods.clickVariationFB = function(req, res) {
   _baseClickVariation(req, res, model.VariationFB, 'variation_fb');
@@ -153,8 +163,22 @@ var _baseDeleteVariation = function(req, res, targetModel) {
   });
 }
 
+var _baseShareVariation = function(req, res, targetModel) {
+  targetModel.getByShortcode(req.params.shortcode, function(variation) {
+
+    if (!variation)
+      return error.json(res, 'TESTS_BAD_SHORTCODE');
+
+    targetModel.logShare(variation.id);
+    res.json('lol');
+  });
+}
+
 var _baseClickVariation = function(req, res, targetModel, pageTemplate) {
   targetModel.getByShortcode(req.params.shortcode, function(variation) {
+
+    if (!variation)
+      return error.json(res, 'TESTS_BAD_SHORTCODE');
 
     var shouldLogClick = true;
 

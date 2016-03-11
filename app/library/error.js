@@ -15,6 +15,10 @@ module.exports = {
     'msg':  'An invalid URL was passed.',
     'code': 400
   },
+  TESTS_BAD_SHORTCODE: {
+    'msg':  'The requested resource could not be found.',
+    'code': 404
+  },
   TESTS_BAD_IMAGE_UPLOAD: {
     'msg':  'An invalid image was passed.',
     'code': 400

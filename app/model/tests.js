@@ -93,6 +93,7 @@ var _init = function(baseModel) {
          */
         getByShortcode: function(shortcode, callback) {
           this.findOne({where: {shortcode: shortcode}}).then(function(result) {
+            if (!result) return callback(null);
             result = result.toJSON();
             result._fp_url = model._util.config.url + '/f/' + result.shortcode;
             callback(result);
@@ -105,6 +106,7 @@ var _init = function(baseModel) {
         significanceTest: _mixinSignificanceTest,
         generateShortcode: _mixinGenerateShortcode,
         logClick: _mixinLogClick,
+        logShare: _mixinLogShare,
         findAndDeactivateLosers: _mixinFindAndDeactivateLosers,
         _deactivateLosers: _mixin_deactivateLosers
       }
@@ -196,13 +198,13 @@ var _init = function(baseModel) {
          */
         getByShortcode: function(shortcode, callback) {
           this.findOne({where: {shortcode: shortcode}}).then(function(result) {
+            if (!result) return callback(null);
             result = result.toJSON();
             try {
               result._fp_domain = new URL(result.url).host
             } catch(err) {
               console.log('Maybe you should use a real URL.');
             }
-
             callback(result);
           });
         },
@@ -213,6 +215,7 @@ var _init = function(baseModel) {
         significanceTest: _mixinSignificanceTest,
         generateShortcode: _mixinGenerateShortcode,
         logClick: _mixinLogClick,
+        logShare: _mixinLogShare,
         findAndDeactivateLosers: _mixinFindAndDeactivateLosers,
         _deactivateLosers: _mixin_deactivateLosers
       }
@@ -388,7 +391,7 @@ var _mixin_deactivateLosers = function(candidates) {
   for (var i = 1; i < candidates.length; i++) {
     var cand = candidates[i];
 
-    // yeah, i know. this is theoretically inefficient. nobody cares.
+    // yeah, i know. this is theoretically inefficient. TODO FIX EVERYTHING.
     if (!baseline.clicks || !baseline.shares || !cand.clicks || !cand.shares)
       continue;
 
@@ -434,6 +437,10 @@ var _mixin_deactivateLosers = function(candidates) {
 
 var _mixinLogClick = function(id) {
   this.update({clicks: Sequelize.literal('clicks +1')}, {where: {id: id}});
+}
+
+var _mixinLogShare = function(id) {
+  this.update({shares: Sequelize.literal('shares +1')}, {where: {id: id}});
 }
 
 module.exports = { _init: _init };
