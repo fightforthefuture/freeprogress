@@ -47,6 +47,9 @@ var _initDB = function(db) {
             host: db.host,
             port: db.port,
             dialect: 'postgres',
+            dialectOptions: {
+              ssl: true
+            },
             pool: {
                 max: 5,
                 min: 0,
