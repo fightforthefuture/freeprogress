@@ -12,12 +12,10 @@ var model = require('./model/_base');
 var controller = require('./controller/_base');
 var routes = require('./config/routes');
 
-model._init(keys.db, keys.aws);   // Initialize model from db, aws config
-controller._init(model);          // Initialize controller from model
-
-var auth = require('./library/auth')(model);
-
-routes._init(controller, auth);   // Initiallize router from controller
+model._init(keys.db, keys.aws, keys.config); // Initialize model from keys
+controller._init(model);                     // Initialize controller from model
+var auth = require('./library/auth')(model); // Initialize security from model
+routes._init(controller, auth);              // Init router from controller
 
 var sessionInfo = {
   secret: keys.session.secret,

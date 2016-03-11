@@ -15,6 +15,9 @@ var TestDashboardView = function(data) {
     ul1.className = 'variation_tws';
     frag.appendChild(ul1);
 
+    var hr = $c('hr');
+    frag.appendChild(hr);
+
     var h42 = $c('h4');
     h42.textContent = 'Facebook Variations';
     frag.appendChild(h42);

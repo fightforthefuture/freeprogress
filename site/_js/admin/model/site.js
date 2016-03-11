@@ -5,7 +5,7 @@ var Sites = Composer.Collection.extend({
 
   populate: function() {
 
-    api.get('/sites', {}, function(err, result) {
+    api.get('/sites', {lol: new Date().getTime()}, function(err, result) {
       if (err)
         return alert(err.msg);
 

@@ -10,8 +10,7 @@ var _init = function(baseModel) {
   var Page = baseModel._sequelize.define('page',
     {
       path: {
-        type: Sequelize.STRING,
-        unique: true
+        type: Sequelize.STRING
       },
       site_id: {
         type: Sequelize.BIGINT,
@@ -47,7 +46,6 @@ var _init = function(baseModel) {
          *  Scrapes social metadata from a URL
          */
         scrapePageMetaData: function(parsedUrl, callback) {
-          console.log('scraping site: ', parsedUrl);
 
           var initialTW = {
             url: parsedUrl.href,
@@ -110,9 +108,6 @@ var _init = function(baseModel) {
                 }
               };
 
-              console.log('initialTW: ', initialTW);
-              console.log('initialFB: ', initialFB);
-
               return callback(null, {
                 initialTW: initialTW,
                 initialFB: initialFB
@@ -165,6 +160,18 @@ var _init = function(baseModel) {
         createFromData: function(page, callback) {
           Page.create(page).then(function(page) {
             callback(page);
+          });
+        },
+
+        /**
+         *  Runs all A/B tests on the Page's social variations
+         */
+        runVariationTests: function() {
+          this.findAll().then(function(pages) {
+            for (var i = 0; i < pages.length; i++) {
+              model.VariationTW.findAndDeactivateLosers(pages[i]);
+              model.VariationFB.findAndDeactivateLosers(pages[i]);
+            }
           });
         }
       }

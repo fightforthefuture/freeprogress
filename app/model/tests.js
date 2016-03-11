@@ -3,6 +3,8 @@ var jsdom = require("node-jsdom");
 var request = require('request').defaults({ encoding: null });
 var imageType = require('image-type');
 var sha1 = require('sha1');
+var jstat = require('../library/jstat');
+var URL = require('url-parse');
 
 var model = null;
 
@@ -34,6 +36,10 @@ var _init = function(baseModel) {
       image_url: {
         type: Sequelize.STRING
       },
+      shortcode: {
+        type: Sequelize.STRING,
+        index: true
+      },
       shares: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
@@ -42,17 +48,10 @@ var _init = function(baseModel) {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
-      confidence: {
-        type: Sequelize.FLOAT,
-        defaultValue: 0.0,
-      },
       active: {
         type: Sequelize.BOOLEAN,
+        index: true,
         defaultValue: true
-      },
-      default: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
       },
       create_date: {
         type: Sequelize.DATE,
@@ -70,16 +69,44 @@ var _init = function(baseModel) {
       classMethods: {
 
         /**
-         *  Creates a variation from a data object
+         *  Gets a random variation from one of the active ones
          */
-        createFromData: function(variation, callback) {
-          VariationFB.create(variation).then(function(variation) {
-            callback(variation);
+        getRandomVariation: function(page, callback) {
+          this.findAll({
+            where: {
+              page_id: page.id,
+              active: true
+            }
+          }).then(function(variations) {
+
+            var baseUrl   = model._util.config.url + '/f';
+            var diceRoll  = Math.floor((Math.random() * variations.length));
+
+            callback({
+              url: baseUrl + '/' + variations[diceRoll].shortcode
+            });
           });
         },
 
+        /**
+         *  Gets a variation by shortcode
+         */
+        getByShortcode: function(shortcode, callback) {
+          this.findOne({where: {shortcode: shortcode}}).then(function(result) {
+            result = result.toJSON();
+            result._fp_url = model._util.config.url + '/f/' + result.shortcode;
+            callback(result);
+          });
+        },
+
+        createFromData: _mixinCreateFromData,
         saveBasicFields: _mixinSaveBasicFields,
-        storeImg: _mixinStoreImg
+        storeImg: _mixinStoreImg,
+        significanceTest: _mixinSignificanceTest,
+        generateShortcode: _mixinGenerateShortcode,
+        logClick: _mixinLogClick,
+        findAndDeactivateLosers: _mixinFindAndDeactivateLosers,
+        _deactivateLosers: _mixin_deactivateLosers
       }
     }
   );
@@ -111,6 +138,10 @@ var _init = function(baseModel) {
       image_url: {
         type: Sequelize.STRING
       },
+      shortcode: {
+        type: Sequelize.STRING,
+        index: true
+      },
       shares: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
@@ -119,17 +150,10 @@ var _init = function(baseModel) {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
-      confidence: {
-        type: Sequelize.FLOAT,
-        defaultValue: 0.0,
-      },
       active: {
         type: Sequelize.BOOLEAN,
+        index: true,
         defaultValue: true,
-      },
-      default: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false,
       },
       create_date: {
         type: Sequelize.DATE,
@@ -147,16 +171,50 @@ var _init = function(baseModel) {
       classMethods: {
 
         /**
-         *  Creates a variation from a data object
+         *  Gets a random variation from one of the active ones
          */
-        createFromData: function(variation, callback) {
-          VariationTW.create(variation).then(function(variation) {
-            callback(variation);
+        getRandomVariation: function(page, callback) {
+          this.findAll({
+            where: {
+              page_id: page.id,
+              active: true
+            }
+          }).then(function(variations) {
+
+            var baseUrl   = model._util.config.url + '/t';
+            var diceRoll  = Math.floor((Math.random() * variations.length));
+
+            callback({
+              url: baseUrl + '/' + variations[diceRoll].shortcode,
+              tweet_text: variations[diceRoll].tweet_text
+            });
           });
         },
 
+        /**
+         *  Gets a variation by shortcode
+         */
+        getByShortcode: function(shortcode, callback) {
+          this.findOne({where: {shortcode: shortcode}}).then(function(result) {
+            result = result.toJSON();
+            try {
+              result._fp_domain = new URL(result.url).host
+            } catch(err) {
+              console.log('Maybe you should use a real URL.');
+            }
+
+            callback(result);
+          });
+        },
+
+        createFromData: _mixinCreateFromData,
         saveBasicFields: _mixinSaveBasicFields,
-        storeImg: _mixinStoreImg
+        storeImg: _mixinStoreImg,
+        significanceTest: _mixinSignificanceTest,
+        generateShortcode: _mixinGenerateShortcode,
+        logClick: _mixinLogClick,
+        findAndDeactivateLosers: _mixinFindAndDeactivateLosers,
+        _deactivateLosers: _mixin_deactivateLosers
       }
     }
   );
@@ -204,7 +262,9 @@ var _mixinSaveBasicFields = function(data, callback) {
     if (typeof data[fields[i]] !== 'undefined')
       query[fields[i]] = data[fields[i]];
 
-  if (query.id)
+  // STUPID ASS UPSERT
+  if (query.id) {
+    query.mod_date = Sequelize.fn('NOW');
     this.update(
       query, { where: {id: query.id}, returning: true }
     ).then(function(data) {
@@ -213,10 +273,24 @@ var _mixinSaveBasicFields = function(data, callback) {
 
       callback(null, data[1][0]);
     }.bind(this));
-  else
-    this.create(query).then(function(record) {
-      callback(null, record);
+  } else
+    this.generateShortcode(function(shortcode) {
+      query.shortcode = shortcode;
+      this.create(query).then(function(record) {
+        callback(null, record);
+      }.bind(this));
     }.bind(this));
+}
+
+var _mixinGenerateShortcode = function(callback) {
+  var candidate = sha1(new Date().toISOString()+Math.random()).substr(0, 6);
+  this.findAll({where: {shortcode: candidate}}).then(function(models) {
+    if (models.length) {
+      console.log('SHORTCODE COLLISION OMG OMG:', candidate);
+      return this.generateShortcode(callback);
+    }
+    callback(candidate);
+  }.bind(this));
 }
 
 var _mixinStoreImg = function(instance, imgData, callback) {
@@ -226,13 +300,11 @@ var _mixinStoreImg = function(instance, imgData, callback) {
   if (!type || !type.ext)
     return callback({ref: 'TESTS_BAD_IMAGE_UPLOAD'}, null);
 
-  var filename = instance.id+'-'+sha1(new Date().toISOString())+'.'+type.ext;
-  var path = model._util.config.aws.s3_folder+'/'+filename;
-  console.log('filename: ', path);
+  var filename  = instance.id+'-'+sha1(new Date().toISOString())+'.'+type.ext;
+  var path      = model._util.config.aws.s3_folder+'/'+filename;
+  var s3        = new  model._util.AWS.S3();
 
-  var s3   = new  model._util.AWS.S3();
-
-  params   = {
+  params = {
     Bucket: model._util.config.aws.s3_bucket,
     Key: path,
     ACL: 'public-read',
@@ -245,9 +317,123 @@ var _mixinStoreImg = function(instance, imgData, callback) {
       return callback({ref: 'SERVER_S3_SAVE_FAIL', data: err}, null);
 
     instance.update({
-      'image_url': '//' + model._util.config.aws.s3_bucket + '/' + path
+      image_url: '//' + model._util.config.aws.s3_bucket + '/' + path,
+      mod_date: Sequelize.fn('NOW')
     }).then(function() { callback(null, instance); });
   });
+}
+
+/**
+ *  Run a signficance test
+ *
+ *  @param n_A - number of clicks on page A
+ *  @param X_A - number of shares on page A
+ *  @param n_B - number of clicks on page B
+ *  @param X_B - number of clicks on page B
+ */
+var _mixinSignificanceTest = function(n_A, X_A, n_B, X_B) {
+
+  var piHat_A = X_A / n_A;                // proportion of successes in group A
+  var piHat_B = X_B / n_B;                // proportion of successes in group B
+  var piHat   = (X_A + X_B)/(n_A + n_B);  // average proportion of successes
+
+  var SE = Math.sqrt(piHat * (1 - piHat) * ((1/n_A)+(1/n_B)) ) // standard error
+
+  var z           = (piHat_A - piHat_B) / SE;
+  var zSquared    = Math.pow(z, 2);
+  var confidence  = 1 - (jstat.pnorm(Math.abs(z) * -1) * 2);
+
+  return {
+    ratioA: piHat_A,
+    ratioB: piHat_B,
+    z: z,
+    winner: z <= 0 ? 'A': 'B',
+    significant: confidence >= .95,
+    confidence: confidence
+  }
+}
+
+var _mixinFindAndDeactivateLosers = function(page) {
+  console.log('deactivating losers...');
+  this.findAll({
+    where: {
+      active: true,
+      page_id: page.id
+    }
+  }).then(this._deactivateLosers);
+}
+
+var _mixinCreateFromData = function(variation, callback) {
+  this.generateShortcode(function(shortcode) {
+    variation.shortcode = shortcode;
+    this.create(variation).then(function(variation) {
+      callback(variation);
+    });
+  }.bind(this));
+};
+
+var _mixin_deactivateLosers = function(candidates) {
+
+  if (candidates.length < 2) {
+    console.log('No viable candidates to compare. We\'re done lol')
+    return 'lol';
+  }
+
+  var foundSignificantResult = false;
+  var baseline = candidates[0];
+
+  console.log('Candidates: ', candidates.length);
+  console.log('[BASELINE] shares:',baseline.shares,'; clicks:',baseline.clicks);
+
+  for (var i = 1; i < candidates.length; i++) {
+    var cand = candidates[i];
+
+    // yeah, i know. this is theoretically inefficient. nobody cares.
+    if (!baseline.clicks || !baseline.shares || !cand.clicks || !cand.shares)
+      continue;
+
+    console.log('---');
+    console.log('[CAND '+i+'] shares:',cand.shares,'; clicks:',cand.clicks);
+
+    var abTest = this.significanceTest(
+      baseline.clicks,
+      baseline.shares,
+      cand.clicks,
+      cand.shares);
+    console.log('test:', abTest);
+
+    if (abTest.significant) {
+      foundSignificantResult = true;
+      console.log('SIGNIFICANT RESULT FOUND LOL');
+
+      if (abTest.winner == 'A') {
+        console.log('Baseline beat candidate. Deactivating candidate!');
+        cand.update({
+          active: false,
+          mod_date: Sequelize.fn('NOW')
+        });
+      } else {
+        console.log('Baseline is loser. Deactivating and bailing!');
+        return baseline.update({
+          active: false,
+          mod_date: Sequelize.fn('NOW')
+        });
+      }
+    }
+  }
+  if (foundSignificantResult == false) {
+    console.log('NO SIGNIFICANT RESULT FOUND :(');
+    console.log('Dumping baseline candidate and starting over lol...');
+    console.log('---------------------------------------------------');
+    console.log('---------------------------------------------------');
+    console.log('---------------------------------------------------');
+    candidates.shift();
+    this._deactivateLosers(candidates);
+  }
+}
+
+var _mixinLogClick = function(id) {
+  this.update({clicks: Sequelize.literal('clicks +1')}, {where: {id: id}});
 }
 
 module.exports = { _init: _init };

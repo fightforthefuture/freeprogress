@@ -8,10 +8,12 @@ var util        = {
   config: {}
 };
 
-var _init = function(db, aws) {
+var _init = function(db, aws, config) {
+
+    _initConfig(config);
+
     var sequelize               = _initDB(db);
     util.AWS                    = _initAWS(aws);
-
     module.exports._util        = util;
     module.exports._sequelize   = sequelize;
     module.exports._dbPrefix    = db.prefix;
@@ -29,6 +31,12 @@ var _export = function(model) {
   for (var exportable in model)
     if (model.hasOwnProperty(exportable))
       module.exports[exportable] = model[exportable];
+}
+
+var _initConfig = function(config) {
+  for (setting in config)
+    if (config.hasOwnProperty(setting))
+      util.config[setting] = config[setting];
 }
 
 var _initDB = function(db) {

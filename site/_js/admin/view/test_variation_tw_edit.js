@@ -69,13 +69,15 @@ var TestVariationTWEditView = function(data) {
     description.value = data.description ? data.description : '';
     form.appendChild(description);
 
-    siteNameLabel.textContent = 'Site Name';
+    /*
+    siteNameLabel.textContent = 'Your Twitter Handle';
     form.appendChild(siteNameLabel);
 
-    siteName.name = 'site_name';
+    siteName.name = 'site';
     siteName.type = 'text';
-    siteName.value = data.site_name ? data.site_name : '';
+    siteName.value = data.site ? data.site : '';
     form.appendChild(siteName);
+    */
 
     urlLabel.textContent = 'Page URL';
     form.appendChild(urlLabel);

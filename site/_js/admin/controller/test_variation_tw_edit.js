@@ -4,7 +4,7 @@ var TestVariationTWEditController = BaseTestVariationEditController.extend({
         'input[name="tweet_text"]': 'tweet_text',
         'input[name="title"]': 'title',
         'input[name="description"]': 'description',
-        'input[name="site_name"]': 'site_name',
+        // 'input[name="site"]': 'site',
         'input[name="url"]': 'url',
         'input[name="image"]': 'imageInput',
         'img': 'imagePlaceholder',
@@ -30,7 +30,7 @@ var TestVariationTWEditController = BaseTestVariationEditController.extend({
         tweet_text: this.tweet_text.value,
         title: this.title.value,
         description: this.description.value,
-        site_name: this.site_name.value,
+        // site: this.site.value,
         url: this.url.value
       };
     }

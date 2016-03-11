@@ -5,7 +5,12 @@ var Pages = Composer.Collection.extend({
 
   populateFromSite: function(site) {
 
-    api.get('/pages', {site_id: site.get('id')}, function(err, result) {
+    var query = {
+      site_id: site.get('id'),
+      lol: new Date().getTime()
+    };
+
+    api.get('/pages', query, function(err, result) {
       if (err)
         return alert(err.msg);
 

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="{{ config.twitter_username }}">
+<meta name="twitter:title" content="{{ title }}">
+<meta name="twitter:description" content="{{ description }}"/>
+<meta name="twitter:image:src" content="{{ image_url }}">
+<meta name="twitter:domain" content="{{ _fp_domain }}">
+<meta name="twitter:account_id" content="{{ config.twitter_account_id }}" />
+
+<script type="text/javascript">
+console.log('meta tags: ', document.querySelectorAll('meta'));
+</script>
+<style type="text/css">
+body { color: white; }
+</style>
+</head>
+<body>
+<h1>{{ title }}</h1>
+<p>{{ description }}</p>
+<a href="{{ url }}" target="_blank">{{ url }}</a>
+</body>
+</html>

@@ -19,7 +19,7 @@ var _init = function(baseController, auth) {
           var method        = router[components[0].toLowerCase()].bind(router);
           var path          = (c != 'static' ? '/' + c : '') + components[1];
           var handler       = controller[c][controller[c]['_routes'][route]];
-          
+
           if (requiresAuth)
             method(path, auth, handler);
           else
@@ -28,6 +28,10 @@ var _init = function(baseController, auth) {
       }
     }
   }
+
+  // special routes lol
+  router.get('/f/:shortcode', controller.tests.clickVariationFB);
+  router.get('/t/:shortcode', controller.tests.clickVariationTW);
 }
 
 module.exports = {

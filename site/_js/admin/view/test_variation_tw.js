@@ -25,16 +25,6 @@ var TestVariationTWView = function(data) {
     clicks.appendChild(span);
     stats.appendChild(clicks);
 
-    var confidence = $c('div');
-    confidence.className = 'confidence';
-    var caption = $c('strong');
-    caption.textContent = 'confidence:';
-    var span = $c('span');
-    span.textContent = data.confidence;
-    confidence.appendChild(caption);
-    confidence.appendChild(span);
-    stats.appendChild(confidence);
-
     frag.appendChild(stats);
 
     var actions = $c('ul');

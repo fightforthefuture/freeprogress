@@ -25,5 +25,10 @@ module.exports = {
     secret_key: env.get('aws').secret_key,
     s3_bucket:  env.get('aws').s3_bucket,
     s3_folder:  env.get('aws').s3_folder
+  },
+  config: {
+    url: env.get('url'),
+    twitter_account_id: env.get('twitter').account_id,
+    twitter_username: env.get('twitter').username
   }
 };

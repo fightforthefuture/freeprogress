@@ -14,7 +14,7 @@ var BaseVariation = Composer.Model.extend({
       if (err)
         return callback(err, null)
 
-      this.set(result.variation_fb);
+      this.set(result[this.resultKey]);
       callback(null, this);
     }.bind(this));
   },
@@ -48,7 +48,8 @@ var BaseVariationCollection = Composer.Collection.extend({
 });
 
 var VariationTW = BaseVariation.extend({
-  endpoint: '/tests/variation_tw'
+  endpoint: '/tests/variation_tw',
+  resultKey: 'variation_tw',
 });
 var VariationTWs = BaseVariationCollection.extend({
   model: VariationTW,
@@ -57,7 +58,8 @@ var VariationTWs = BaseVariationCollection.extend({
 });
 
 var VariationFB = BaseVariation.extend({
-  endpoint: '/tests/variation_fb'
+  endpoint: '/tests/variation_fb',
+  resultKey: 'variation_fb',
 });
 var VariationFBs = BaseVariationCollection.extend({
   model: VariationFB,

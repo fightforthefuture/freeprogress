@@ -6,14 +6,10 @@ var BaseTestVariationController = Composer.Controller.extend({
   },
 
   assignDisplayClasses: function() {
-    this.el.classList.remove('active');
-    this.el.classList.remove('default');
+    this.el.classList.remove('inactive');
 
-    if (this.model.get('active'))
-      this.el.classList.add('active');
-
-    if (this.model.get('default'))
-      this.el.classList.add('default');
+    if (!this.model.get('active'))
+      this.el.classList.add('inactive');
   },
 
   delete: function(e) {

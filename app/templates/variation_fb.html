@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta property="og:title" content="{{ title }}">
+<meta property="og:description" content="{{ description }}">
+<meta property="og:url" content="{{ _fp_url }}">
+<meta property="og:image" content="{{ image_url }}">
+<meta property="og:site_name" content="{{ site_name }}">
+<meta property="og:type" content="website">
+<script type="text/javascript">
+console.log('meta tags: ', document.querySelectorAll('meta'));
+</script>
+<style type="text/css">
+body { color: white; }
+</style>
+</head>
+<body>
+<h1>{{ title }}</h1>
+<p>{{ description }}</p>
+<a href="{{ url }}" target="_blank">{{ url }}</a>
+</body>
+</html>
