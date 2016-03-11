@@ -1,1 +1,1 @@
-# Free Progress 🎉 
+# Free Progress
