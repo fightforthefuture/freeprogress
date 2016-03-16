@@ -340,7 +340,24 @@ var _mixinSignificanceTest = function(n_A, X_A, n_B, X_B) {
   var piHat_B = X_B / n_B;                // proportion of successes in group B
   var piHat   = (X_A + X_B)/(n_A + n_B);  // average proportion of successes
 
-  var SE = Math.sqrt(piHat * (1 - piHat) * ((1/n_A)+(1/n_B)) ) // standard error
+  // JL NOTE ~ I put this absolute value thing in to prevent imaginary results.
+  // Probably doesn't affect anything statistically. Maybe.
+  var SE = Math.sqrt(Math.abs(piHat * (1 - piHat) * ((1/n_A)+(1/n_B)) )) // standard error
+
+  /*
+  console.log('n_A: ', n_A);
+  console.log('X_A: ', X_A);
+  console.log('n_B: ', n_B);
+  console.log('X_B: ', X_B);
+  console.log('piHat_A: ', piHat_A);
+  console.log('piHat_B: ', piHat_B);
+  console.log('piHat: ', piHat);
+  console.log('(1 - piHat):', (1-piHat));
+  console.log('((1/n_A)+(1/n_B)):', ((1/n_A)+(1/n_B)) );
+  console.log('(1 - piHat) * ((1/n_A)+(1/n_B)):', (1 - piHat) * ((1/n_A)+(1/n_B)));
+  console.log('piHat * (1 - piHat) * ((1/n_A)+(1/n_B)): ', piHat * (1 - piHat) * ((1/n_A)+(1/n_B)));
+  console.log('SE: ', SE);
+  */
 
   var z           = (piHat_A - piHat_B) / SE;
   var zSquared    = Math.pow(z, 2);

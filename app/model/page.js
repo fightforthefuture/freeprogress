@@ -188,6 +188,11 @@ var _init = function(baseModel) {
   model.Site.hasMany(Page);
 
   module.exports.Page = Page;
+
+  setInterval(function() {
+    console.log('Running variation tests...');
+    model.Page.runVariationTests();
+  }, 300000);
 }
 
 module.exports = { _init: _init };
