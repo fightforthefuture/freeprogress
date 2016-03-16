@@ -320,7 +320,7 @@ var _mixinStoreImg = function(instance, imgData, callback) {
       return callback({ref: 'SERVER_S3_SAVE_FAIL', data: err}, null);
 
     instance.update({
-      image_url: '//' + model._util.config.aws.s3_bucket + '/' + path,
+      image_url: 'https://' + model._util.config.aws.s3_bucket + '/' + path,
       mod_date: Sequelize.fn('NOW')
     }).then(function() { callback(null, instance); });
   });
