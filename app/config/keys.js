@@ -29,6 +29,7 @@ module.exports = {
   config: {
     url: env.get('url'),
     twitter_account_id: env.get('twitter').account_id,
-    twitter_username: env.get('twitter').username
+    twitter_username: env.get('twitter').username,
+    test_viability_threshold: parseInt(env.get('test').viability_threshold)
   }
 };
