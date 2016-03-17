@@ -180,7 +180,8 @@ var _baseClickVariation = function(req, res, targetModel, pageTemplate) {
     if (!variation)
       return error.json(res, 'TESTS_BAD_SHORTCODE');
 
-    var shouldLogClick = true;
+    var shouldLogClick  = true;
+    var user_agent      = req.headers['user-agent'] || '(none)';
 
     // never trust the client.
     try {
@@ -189,12 +190,13 @@ var _baseClickVariation = function(req, res, targetModel, pageTemplate) {
       var clicks = [];
     }
 
-    // JL DEBUG ~ disabled cookie tracking until we test the basic functionality
-    /*
     if (clicks)
       for (var i = 0; i < clicks.length; i++)
         if (clicks[i] == variation.shortcode)
           shouldLogClick = false;
+
+    if (!variation.active)
+      shouldLogClick = false;
 
     if (shouldLogClick) {
       clicks.push(variation.shortcode);
@@ -202,9 +204,10 @@ var _baseClickVariation = function(req, res, targetModel, pageTemplate) {
         expires: new Date(Date.now() + 900000)
       });
       targetModel.logClick(variation.id);
+
+      model.UserAgentLog.create({ user_agent: user_agent });
     }
-    */
-    targetModel.logClick(variation.id); // JL DEBUG ~
+
     variation.config = model._util.config;
 
     var tmpl = template.compileFile('app/templates/'+pageTemplate+'.html');

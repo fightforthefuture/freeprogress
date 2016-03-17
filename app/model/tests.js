@@ -409,8 +409,18 @@ var _mixin_deactivateLosers = function(candidates) {
     var cand = candidates[i];
 
     // yeah, i know. this is theoretically inefficient. TODO FIX EVERYTHING.
-    if (!baseline.clicks || !baseline.shares || !cand.clicks || !cand.shares)
+    if (
+      !baseline.clicks
+      ||
+      baseline.shares < 20
+      ||
+      !cand.clicks
+      ||
+      cand.shares < 20
+    ) {
+      console.log('Candidate or baseline below viability threshold. Skip lol');
       continue;
+    }
 
     console.log('---');
     console.log('[CAND '+i+'] shares:',cand.shares,'; clicks:',cand.clicks);

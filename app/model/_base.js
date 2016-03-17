@@ -1,10 +1,11 @@
-var Sequelize   = require('sequelize');
-var site        = require('./site');
-var page        = require('./page');
-var tests       = require('./tests');
-var AWS         = require('aws-sdk');
+var Sequelize       = require('sequelize');
+var site            = require('./site');
+var page            = require('./page');
+var tests           = require('./tests');
+var user_agent_log  = require('./user_agent_log');
+var AWS             = require('aws-sdk');
 
-var util        = {
+var util = {
   config: {}
 };
 
@@ -21,6 +22,7 @@ var _init = function(db, aws, config) {
     _export(site);
     _export(page);
     _export(tests);
+    _export(user_agent_log);
 
     sequelize.sync();
 }
