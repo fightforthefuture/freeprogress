@@ -5,6 +5,8 @@ module.exports = function (grunt) {
     'cachebreaker': 'grunt-cache-breaker'
   });
 
+  var saveLicense = require('uglify-save-license');
+
   grunt.initConfig({
     site: {
       app: 'site',
@@ -112,6 +114,7 @@ module.exports = function (grunt) {
         files: [
           {
             src: [
+              '<%= site.app %>/_js/LICENSE',
               '<%= site.app %>/_js/admin/library/composer-1.1.12.min.js',
               '<%= site.app %>/_js/admin/library/util.js',
               '<%= site.app %>/_js/admin/library/api.js',
@@ -124,6 +127,7 @@ module.exports = function (grunt) {
           },
           {
             src: [
+              '<%= site.app %>/_js/LICENSE',
               '<%= site.app %>/_js/client.js'
             ],
             dest: '<%= site.dist %>/js/client.js'
@@ -136,11 +140,11 @@ module.exports = function (grunt) {
       options: {
         sourceMap: true,
         sourceMapIncludeSources: true,
-        check: 'gzip'
+        check: 'gzip',
+        preserveComments: saveLicense
       },
       build: {
         files: {
-          '<%= site.dist %>/js/core.js': '<%= site.dist %>/js/core.js',
           '<%= site.dist %>/js/client.js': '<%= site.dist %>/js/client.js',
           '<%= site.dist %>/js/admin.js': '<%= site.dist %>/js/admin.js',
         }
@@ -175,7 +179,7 @@ module.exports = function (grunt) {
           '<%= site.app %>/_js/**/*.js',
           '<%= site.app %>/_js/admin/*.js',
         ],
-        tasks: ['concat:scripts']
+        tasks: ['concat:scripts', 'uglify']
       },
       assets: {
         files: [
