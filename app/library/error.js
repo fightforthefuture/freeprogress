@@ -11,6 +11,14 @@ module.exports = {
     'msg':  'Access denied.',
     'code': 401
   },
+  SITE_UNAUTHORIZED_DOMAIN: {
+    'msg':  'This domain is not authorized for Free Progress.',
+    'code': 401
+  },
+  SITE_DOMAIN_SECURITY_SCRAPE_FAIL: {
+    'msg':  'An error occured while scraping freeprogress.txt from this domain',
+    'code': 400
+  },
   TESTS_BAD_URL: {
     'msg':  'An invalid URL was passed.',
     'code': 400

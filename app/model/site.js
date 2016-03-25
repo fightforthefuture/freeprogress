@@ -1,5 +1,7 @@
-var Sequelize   = require('sequelize');
-var URL = require('url-parse');
+var Sequelize = require('sequelize'),
+    URL       = require('url-parse'),
+    request   = require('request'),
+    hash      = require('sha.js');
 
 var model = null;
 
@@ -65,18 +67,22 @@ var _init = function(baseModel) {
           Site.findOne(query).then(function(site) {
 
             if (!site) {
-              return model.Page.scrapePageMetaData(parsedUrl, function(err, metaData){
+              return this.domainSecurityCheck(parsedUrl, function(err) {
                 if (err) return callback(err, null)
 
-                this.populateFromPageMetaData(parsedUrl, metaData, callback);
+                model.Page.scrapeMetaData(parsedUrl, function(err, mData) {
+                  if (err) return callback(err, null)
+
+                  this.populateFromPageMetaData(parsedUrl, mData, callback);
+                }.bind(this));
               }.bind(this));
             }
 
             if (site.pages.length == 0) {
-              return model.Page.scrapePageMetaData(parsedUrl, function(err, metaData){
+              return model.Page.scrapeMetaData(parsedUrl, function(err, mData) {
                 if (err) return callback(err, null)
 
-                model.Page.populateFromMetaData(site, parsedUrl, metaData, callback);
+                model.Page.populateFromMetaData(site,parsedUrl,mData,callback);
               }.bind(this));
             }
 
@@ -90,7 +96,7 @@ var _init = function(baseModel) {
          */
         populateFromPageMetaData: function(parsedUrl, metaData, callback) {
           return this.createFromData({host: parsedUrl.host}, function(site){
-            model.Page.populateFromMetaData(site, parsedUrl, metaData, callback);
+            model.Page.populateFromMetaData(site,parsedUrl,metaData,callback);
           });
         },
 
@@ -100,6 +106,31 @@ var _init = function(baseModel) {
         createFromData: function(site, callback) {
           Site.create(site).then(function(site) {
             callback(site);
+          });
+        },
+
+        /**
+         *  Checks that the domain is authorized for Free Progress
+         */
+        domainSecurityCheck: function(url, callback) {
+
+          if (model._util.config.domain_security != 'on')
+            return callback();
+
+          var securityToken = model._util.config.domain_security_token.trim(),
+              sanitizeHost  = url.host.trim().toLowerCase(),
+              tokenConcat   = securityToken + sanitizeHost,
+              correctHash   = hash('sha256').update(tokenConcat).digest('hex'),
+              tokenHashUrl  = url.protocol+'//'+url.host+'/freeprogress.txt';
+
+          request(tokenHashUrl, function (err, response, body) {
+            if (err || response.statusCode != 200)
+              return callback({ref: 'SITE_DOMAIN_SECURITY_SCRAPE_FAIL'});
+
+            if (body.trim() != correctHash)
+              return callback({ref: 'SITE_UNAUTHORIZED_DOMAIN'});
+
+            return callback();
           });
         }
       }

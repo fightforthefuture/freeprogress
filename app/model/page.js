@@ -45,7 +45,7 @@ var _init = function(baseModel) {
         /*
          *  Scrapes social metadata from a URL
          */
-        scrapePageMetaData: function(parsedUrl, callback) {
+        scrapeMetaData: function(parsedUrl, callback) {
 
           var initialTW = {
             url: parsedUrl.href,

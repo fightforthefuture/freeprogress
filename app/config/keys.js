@@ -30,6 +30,8 @@ module.exports = {
     url: env.get('url'),
     twitter_account_id: env.get('twitter').account_id,
     twitter_username: env.get('twitter').username,
-    test_viability_threshold: parseInt(env.get('test').viability_threshold)
+    test_viability_threshold: parseInt(env.get('test').viability_threshold),
+    domain_security: env.get('domain').security,
+    domain_security_token: env.get('domain').security_token
   }
 };
