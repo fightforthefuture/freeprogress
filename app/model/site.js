@@ -118,8 +118,8 @@ var _init = function(baseModel) {
             return callback();
 
           var securityToken = model._util.config.domain_security_token.trim(),
-              sanitizeHost  = url.host.trim().toLowerCase(),
-              tokenConcat   = securityToken + sanitizeHost,
+              sanitizedHost = url.host.trim().toLowerCase(),
+              tokenConcat   = securityToken + sanitizedHost,
               correctHash   = hash('sha256').update(tokenConcat).digest('hex'),
               tokenHashUrl  = url.protocol+'//'+url.host+'/freeprogress.txt';
 
@@ -130,7 +130,7 @@ var _init = function(baseModel) {
             if (body.trim() != correctHash)
               return callback({ref: 'SITE_UNAUTHORIZED_DOMAIN'});
 
-            return callback();
+            callback();
           });
         }
       }
