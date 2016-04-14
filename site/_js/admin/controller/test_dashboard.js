@@ -44,7 +44,10 @@ var TestDashboardController = Composer.Controller.extend({
           });
           this.with_bind_once(itemController, 'deleted', function(model) {
             this.collection.remove(model);
-          }.bind(this))
+          }.bind(this));
+          this.with_bind(itemController, 'duplicate', function(model) {
+            this.collection.add(model);
+          }.bind(this));
           return itemController;
         }.bind(this), {bind_reset: true})
       }

@@ -23,5 +23,11 @@ var BaseTestVariationController = Composer.Controller.extend({
       });
       this.trigger('deleted', this.model);
     }
+  },
+
+  bindDuplicateSave: function(duplicate) {
+    this.with_bind_once(duplicate, 'saved', function(model) {
+      this.trigger('duplicate', model);
+    }.bind(this));
   }
 });

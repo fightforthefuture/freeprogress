@@ -5,7 +5,8 @@ var TestVariationTWController = BaseTestVariationController.extend({
   },
   events: {
     'click a.edit': 'edit',
-    'click a.delete': 'delete'
+    'click a.delete': 'delete',
+    'click a.duplicate': 'duplicate'
   },
 
   render: function() {
@@ -20,5 +21,13 @@ var TestVariationTWController = BaseTestVariationController.extend({
       e.preventDefault();
 
     new TestVariationTWEditController({model: this.model});
+  },
+
+  duplicate: function(e) {
+    if (e)
+      e.preventDefault();
+
+    var dup = new TestVariationTWEditController({model:this.model.duplicate()});
+    this.bindDuplicateSave(dup);
   }
 });

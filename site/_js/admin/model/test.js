@@ -26,6 +26,16 @@ var BaseVariation = Composer.Model.extend({
 
       callback(null, true);
     });
+  },
+
+  _baseDuplicate: function(model) {
+    var copy = this.toJSON();
+    delete copy.id;
+    delete copy.clicks;
+    delete copy.shares;
+    delete copy.create_date;
+    delete copy.shortcode;
+    return new model(copy);
   }
 });
 
@@ -50,6 +60,7 @@ var BaseVariationCollection = Composer.Collection.extend({
 var VariationTW = BaseVariation.extend({
   endpoint: '/tests/variation_tw',
   resultKey: 'variation_tw',
+  duplicate: function() { return this._baseDuplicate(VariationTW); }
 });
 var VariationTWs = BaseVariationCollection.extend({
   model: VariationTW,
@@ -60,6 +71,7 @@ var VariationTWs = BaseVariationCollection.extend({
 var VariationFB = BaseVariation.extend({
   endpoint: '/tests/variation_fb',
   resultKey: 'variation_fb',
+  duplicate: function() { return this._baseDuplicate(VariationFB); }
 });
 var VariationFBs = BaseVariationCollection.extend({
   model: VariationFB,

@@ -5,7 +5,8 @@ var TestVariationFBController = BaseTestVariationController.extend({
   },
   events: {
     'click a.edit': 'edit',
-    'click a.delete': 'delete'
+    'click a.delete': 'delete',
+    'click a.duplicate': 'duplicate'
   },
 
   render: function() {
@@ -20,5 +21,13 @@ var TestVariationFBController = BaseTestVariationController.extend({
       e.preventDefault();
 
     new TestVariationFBEditController({model: this.model});
+  },
+
+  duplicate: function(e) {
+    if (e)
+      e.preventDefault();
+
+    var dup = new TestVariationFBEditController({model:this.model.duplicate()});
+    this.bindDuplicateSave(dup);
   }
 });

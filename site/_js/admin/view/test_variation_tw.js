@@ -46,6 +46,14 @@ var TestVariationTWView = function(data) {
     li.appendChild(a);
     actions.appendChild(li);
 
+    var li = $c('li');
+    var a = $c('a');
+    a.className = 'duplicate';
+    a.textContent = 'new duplicate'
+    a.href = '#';
+    li.appendChild(a);
+    actions.appendChild(li);
+
     frag.appendChild(actions);
 
     var preview = $c('div');
