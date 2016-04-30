@@ -82,7 +82,7 @@ var _init = function(baseModel) {
                     case 'twitter:description':
                       initialTW.description = content;
                       break;
-                    case 'twitter:image:src':
+                    case 'twitter:image':
                       initialTW.image_url = content;
                       break;
                     case 'twittertext':
