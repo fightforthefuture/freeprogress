@@ -32,6 +32,13 @@ module.exports = {
     twitter_username: env.get('twitter').username,
     test_viability_threshold: parseInt(env.get('test').viability_threshold),
     domain_security: env.get('domain').security,
-    domain_security_token: env.get('domain').security_token
+    domain_security_token: env.get('domain').security_token,
+    alerts_sending: env.get('alerts').sending,
+    alerts_admin_email: env.get('alerts').admin_email,
+    sendgrid_api_key: env.get('sendgrid').api_key,
+    actionnetwork_integration: env.get('actionnetwork').integration,
+    actionnetwork_api_key: env.get('actionnetwork').api_key,
+    actionnetwork_less_emails_tag: env.get('actionnetwork').less_emails_tag
   }
+
 };

@@ -71,7 +71,7 @@ var _init = function(baseModel) {
         /**
          *  Gets a random variation from one of the active ones
          */
-        getRandomVariation: function(page, callback) {
+        getRandomVariation: function(page, options, callback) {
           this.findAll({
             where: {
               page_id: page.id,
@@ -80,6 +80,10 @@ var _init = function(baseModel) {
           }).then(function(variations) {
 
             var baseUrl   = model._util.config.url + '/f';
+
+            if (options.emailRedirect)
+              baseUrl += 'e';
+
             var diceRoll  = Math.floor((Math.random() * variations.length));
 
             callback({
@@ -175,7 +179,7 @@ var _init = function(baseModel) {
         /**
          *  Gets a random variation from one of the active ones
          */
-        getRandomVariation: function(page, callback) {
+        getRandomVariation: function(page, options, callback) {
           this.findAll({
             where: {
               page_id: page.id,
@@ -184,6 +188,10 @@ var _init = function(baseModel) {
           }).then(function(variations) {
 
             var baseUrl   = model._util.config.url + '/t';
+
+            if (options.emailRedirect)
+              baseUrl += 'e';
+
             var diceRoll  = Math.floor((Math.random() * variations.length));
 
             callback({
@@ -342,7 +350,8 @@ var _mixinSignificanceTest = function(n_A, X_A, n_B, X_B) {
 
   // JL NOTE ~ I put this absolute value thing in to prevent imaginary results.
   // Probably doesn't affect anything statistically. Maybe.
-  var SE = Math.sqrt(Math.abs(piHat * (1 - piHat) * ((1/n_A)+(1/n_B)) )) // standard error
+  // standard error formula
+  var SE = Math.sqrt(Math.abs(piHat * (1 - piHat) * ((1/n_A)+(1/n_B)) ))
 
   /*
   console.log('n_A: ', n_A);

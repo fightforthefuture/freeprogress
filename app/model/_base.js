@@ -2,6 +2,7 @@ var Sequelize       = require('sequelize');
 var site            = require('./site');
 var page            = require('./page');
 var tests           = require('./tests');
+var email           = require('./email');
 var user_agent_log  = require('./user_agent_log');
 var AWS             = require('aws-sdk');
 
@@ -23,6 +24,7 @@ var _init = function(db, aws, config) {
     _export(page);
     _export(tests);
     _export(user_agent_log);
+    _export(email);
 
     sequelize.sync();
 }

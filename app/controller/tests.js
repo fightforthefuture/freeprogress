@@ -82,8 +82,8 @@ methods.getTestForUrl = function(req, res) {
 
     var page = site.pages[0];
 
-    model.VariationTW.getRandomVariation(page, function(variation_tw) {
-      model.VariationFB.getRandomVariation(page, function(variation_fb) {
+    model.VariationTW.getRandomVariation(page, {}, function(variation_tw) {
+      model.VariationFB.getRandomVariation(page, {}, function(variation_fb) {
         res.json({
           variation_fb: variation_fb,
           variation_tw: variation_tw

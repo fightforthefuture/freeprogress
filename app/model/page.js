@@ -55,6 +55,10 @@ var _init = function(baseModel) {
             url: parsedUrl.href,
             default: true
           };
+          var autoresponder = {
+            subject: null,
+            body: null
+          }
 
           jsdom.env(
             parsedUrl.href,
@@ -89,6 +93,13 @@ var _init = function(baseModel) {
                     case 'twitter:text':
                       initialTW.tweet_text = content;
                       break;
+                    case 'autoresponder_subject':
+                      autoresponder.subject = content;
+                      break;
+                    case 'autoresponder_text':
+                    case 'autoresponder_body':
+                      autoresponder.body = content;
+                      break;
                   }
 
                   switch (property) {
@@ -109,8 +120,9 @@ var _init = function(baseModel) {
               };
 
               return callback(null, {
-                initialTW: initialTW,
-                initialFB: initialFB
+                initialTW:     initialTW,
+                initialFB:     initialFB,
+                autoresponder: autoresponder
               });
             }
           );

@@ -39,6 +39,22 @@ module.exports = {
     'msg':  'An internal error occurred while updating that FB variation.',
     'code': 500
   },
+  EMAILS_MISSING_EMAIL: {
+    'msg':  'Missing email parameter.',
+    'code': 400
+  },
+  EMAILS_MISSING_URL: {
+    'msg':  'Missing url paramater.',
+    'code': 400
+  },
+  EMAILS_ACTION_NETWORK_DISABLED: {
+    'msg':  'Scheduled email requires Action Network, but integration disabled',
+    'code': 500
+  },
+  EXTERNAL_NETWORK_SUBSCRIBER_LOOKUP_FAIL: {
+    'msg':  'Could not lookup subscriber info from external network.',
+    'code': 500
+  },
   json: function(res, code) {
     if (typeof this[code] === 'undefined')
       code = 'SERVER_DEFAULT';
