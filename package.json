@@ -51,6 +51,7 @@
     "habitat": "^3.1.2",
     "image-type": "^2.1.0",
     "jit-grunt": "^0.9.1",
+    "moment": "^2.13.0",
     "multiparty": "^4.1.2",
     "node-jsdom": "^3.1.5",
     "pg": "^4.5.1",

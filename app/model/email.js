@@ -1,13 +1,15 @@
 var Sequelize = require('sequelize'),
-    URL       = require('url-parse');
+    URL       = require('url-parse'),
+    moment    = require('moment');
 
 var model = null;
+var sendMail = null;
 
 var _init = function(baseModel) {
 
   model = baseModel;
 
-  var sendMail = require("../library/mailer")(model._util.config);
+  sendMail = require("../library/mailer")(model._util.config);
 
   var Email = baseModel._sequelize.define('email',
     {
@@ -24,6 +26,10 @@ var _init = function(baseModel) {
       external_network_id: {
         type: Sequelize.STRING
       },
+      send_after: {
+        type: Sequelize.DATE,
+        index: true
+      },
       create_date: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
@@ -39,19 +45,25 @@ var _init = function(baseModel) {
       tableName: baseModel._dbPrefix + 'email',
       classMethods: {
 
-        scheduleEmailForUrl: function(email, url, external, external_id, cb) {
+        scheduleEmailForUrl: function(email, url, hours, network, userId, cb) {
           if (!email)
             return cb({ref: 'EMAILS_MISSING_EMAIL', data: url}, null);
 
           if (!url)
             return cb({ref: 'EMAILS_MISSING_URL', data: url}, null);
 
+          if (model._util.config.email_scheduler != 'on')
+            return cb({ref: 'EMAILS_DISABLED'}, null);
+
           Email.destroy({ where: { email: email } }).then(function(deleted) {
+            console.log('hours: ', hours);
+            console.log('diff:', 60 * 60 * 1000 * parseInt(hours));
             Email.create({
               email:                email,
               url:                  url,
-              external_network:     external,
-              external_network_id:  external_id
+              external_network:     network,
+              external_network_id:  userId,
+              send_after:           moment().add(hours, 'hours')
             }).then(function(email) {
               cb(null, email);
             });
@@ -60,20 +72,20 @@ var _init = function(baseModel) {
       }
     }
   );
+
+  if (model._util.config.email_scheduler == 'on')
+    setTimeout(function() {
+      processNextEmail();
+    }, 300);
+
   module.exports.Email = Email;
 }
-
-var waitToProcessNext = function(delay) {
-  return setTimeout(function() {
-    processNextEmail();
-  }, delay);
-};
 
 var processNextEmail = function() {
   model.Email.findOne({
     where: {
       // JL DEBUG ~ comment the next line out to send immediately lololo
-      // create_date: {$lt: new Date(new Date() - 24 * 60 * 60 * 1000 * 3)}
+      send_after: {$lt: new Date()}
     }
   }).then(function(email) {
     if (!email) {
@@ -108,38 +120,42 @@ var processNextEmail = function() {
         var an = require("../library/action-network");
         an.init(model._util.config);
 
-        return an.verifySubscriber(
-          email.external_network_id,
-          function(err, isSubscriber) {
-            if (err) {
-              console.log('ACTION NETWORK ERROR: ', err);
-              // JL NOTE ~ should i destroy if action network error?
-              // JL NOTE ~ or should i just try again in 30 seconds?
-              // JL NOTE ~ guess i wait to see if this destroys my inbox
-              // destroyEmailAndProcessNext(email);
-              waitToProcessNext(30000);
-              return sendErrorAlertEmail({
-                info: 'Action Network error',
-                email:                email.email,
-                url:                  email.url,
-                external_network:     email.external_network,
-                external_network_id:  email.external_network_id,
-                err:                  err,
-                });
-            }
-            if (!isSubscriber) {
-              console.log('Email '+email.email+' not subscribed. ABORT')
-              return destroyEmailAndProcessNext(email);
-            }
-            console.log('SUBSCRIBED YAY');
-            scrapePageAndSendEmailAndProcessNext(email, site);
+        return an.verifySubscriber(email.external_network_id, function(err, ok){
+          if (err) {
+            console.log('ACTION NETWORK ERROR: ', err);
+            // JL NOTE ~ should i destroy if action network error?
+            // JL NOTE ~ or should i just try again in 30 seconds?
+            // JL NOTE ~ guess i wait to see if this destroys my inbox
+            // destroyEmailAndProcessNext(email);
+            waitToProcessNext(30000);
+            return sendErrorAlertEmail({
+              info: 'Action Network error',
+              email:                email.email,
+              url:                  email.url,
+              external_network:     email.external_network,
+              external_network_id:  email.external_network_id,
+              err:                  err,
+              });
           }
-        );
+          if (!ok) {
+            console.log('Email '+email.email+' not subscribed. ABORT')
+            return destroyEmailAndProcessNext(email);
+          }
+          console.log('SUBSCRIBED YAY');
+          scrapePageAndSendEmailAndDestroyAndProcessNextLol(email, site);
+        });
       }
-      return scrapePageAndSendEmailAndProcessNext(email, site);
 
+      // If here, Action Network integration is disabled so we're good to send
+      return scrapePageAndSendEmailAndDestroyAndProcessNextLol(email, site);
     });
   });
+};
+
+var waitToProcessNext = function(delay) {
+  return setTimeout(function() {
+    processNextEmail();
+  }, delay);
 };
 
 var destroyEmailAndProcessNext = function(email) {
@@ -149,12 +165,12 @@ var destroyEmailAndProcessNext = function(email) {
   });
 };
 
-var scrapePageAndSendEmailAndProcessNext = function(email, site) {
-  console.log('scrapePageAndSendEmail:');
+var scrapePageAndSendEmailAndDestroyAndProcessNextLol = function(email, site) {
+  console.log('scrapePageAndSendEmail:', email.url);
   var parsedUrl = new URL(email.url);
   model.Page.scrapeMetaData(parsedUrl, function(err, metaData) {
     if (err) {
-      // destroyEmailAndProcessNext(email); // JL DEBUG ~
+      destroyEmailAndProcessNext(email); // JL DEBUG ~
       waitToProcessNext(30000);
       return sendErrorAlertEmail({
         info: 'Error scraping Email Autoresponder target URL',
@@ -165,6 +181,10 @@ var scrapePageAndSendEmailAndProcessNext = function(email, site) {
         err:                  err,
         });
     }
+    if (!metaData.autoresponder.subject || !metaData.autoresponder.body) {
+      console.log('Missing autoresponder data for this page. Skipping lol');
+      return destroyEmailAndProcessNext(email);
+    }
     var page = site.pages[0];
     var options = { emailRedirect: true };
     model.VariationTW.getRandomVariation(page, options, function(tw) {
@@ -174,15 +194,44 @@ var scrapePageAndSendEmailAndProcessNext = function(email, site) {
         console.log('tw:', tw);
         console.log('fb:', fb);
 
-        var body = generateEmailBody(metaData, tw, fb);
+        var unsubscribeUrl = model._util.config.email_unsubscribe_url;
+
+        var body = generateEmailBody(metaData, tw, fb, unsubscribeUrl);
         console.log('body:', body);
+        sendMail({
+          to:       email.email,
+          from:     model._util.config.email_from_address,
+          fromName: model._util.config.email_from_name,
+          subject:  metaData.autoresponder.subject,
+          body:     body
+        });
+        destroyEmailAndProcessNext(email);
       });
     });
   });
 };
 
-var generateEmailBody = function(metaData, variationTW, variationFB) {
-  return 'lol';
+var generateEmailBody = function(data, variationTW, variationFB, unsubscribe) {
+  var body = data.autoresponder.body.replace(/\|/g, '\<\/p\>\<p\>');
+  var body = '<div style="text-align:center; font-size:16px; max-width: 600px; '
+    + 'margin: 0px auto;"><p>'+body+'</p>'; // INCEPTION!
+
+  if (variationFB)
+    body += '<a style="display:inline-block; padding: 5px 20px; font-size:18px;'
+      + 'background: #3b5998; color: #fff; text-decoration: none; '
+      + 'font-weight: bold; margin: 0px 10px; border-radius: 3px; " href="'
+      + variationFB.url+'">Share</a>';
+
+  if (variationTW)
+    body += '<a style="display:inline-block; padding: 5px 15px; font-size:18px;'
+      + 'background: #55acee; color: #fff; text-decoration: none; '
+      + 'font-weight: bold; margin: 0px 10px; border-radius: 3px; " href="'
+      + variationTW.url+'">Tweet</a>';
+
+  body += '<br/><br><p style="font-size: 13px">To manage your email preferences'
+    + ' or unsubscribe, <a href="'+unsubscribe+'">click here</a>.</p></div>';
+
+  return body;
 };
 
 var sendErrorAlertEmail = function(data) {
@@ -211,9 +260,5 @@ var sendErrorAlertEmail = function(data) {
     body:     body
   });
 };
-
-setTimeout(function() {
-  processNextEmail();
-}, 300);
 
 module.exports = { _init: _init };

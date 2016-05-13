@@ -79,6 +79,9 @@ var _init = function(baseModel) {
             }
           }).then(function(variations) {
 
+            if (variations.length == 0)
+              return callback(null);
+
             var baseUrl   = model._util.config.url + '/f';
 
             if (options.emailRedirect)
@@ -186,6 +189,9 @@ var _init = function(baseModel) {
               active: true
             }
           }).then(function(variations) {
+
+            if (variations.length == 0)
+              return callback(null);
 
             var baseUrl   = model._util.config.url + '/t';
 

@@ -38,7 +38,11 @@ module.exports = {
     sendgrid_api_key: env.get('sendgrid').api_key,
     actionnetwork_integration: env.get('actionnetwork').integration,
     actionnetwork_api_key: env.get('actionnetwork').api_key,
-    actionnetwork_less_emails_tag: env.get('actionnetwork').less_emails_tag
+    actionnetwork_less_emails_tag: env.get('actionnetwork').less_emails_tag,
+    email_scheduler: env.get('email').scheduler,
+    email_from_address: env.get('email').from_address,
+    email_from_name: env.get('email').from_name,
+    email_unsubscribe_url: env.get('email').unsubscribe_url,
   }
 
 };

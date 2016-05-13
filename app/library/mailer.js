@@ -19,6 +19,10 @@ module.exports = function(config) {
     if (message.fromName)
       email.setFromName(message.fromName);
 
-    sendgrid.send(email);
+    sendgrid.send(email, function(err, json) {
+      if (err)
+        return console.error('Sendgrid error:', err);
+      console.log('SENT!', json);
+    });
   }
 };

@@ -19,6 +19,7 @@ var scheduleEmailForUrl = function(req, res) {
   model.Email.scheduleEmailForUrl(
     data.email,
     data.url,
+    data.hours || 72,
     data.external_network,
     data.external_network_id,
     function(err, email) {

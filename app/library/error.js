@@ -39,6 +39,10 @@ module.exports = {
     'msg':  'An internal error occurred while updating that FB variation.',
     'code': 500
   },
+  EMAILS_DISABLED: {
+    'msg':  'Email scheduler is disabled for this deployment.',
+    'code': 401
+  },
   EMAILS_MISSING_EMAIL: {
     'msg':  'Missing email parameter.',
     'code': 400

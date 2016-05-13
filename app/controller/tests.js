@@ -12,16 +12,18 @@ template.setDefaults({
 
 var _routes = {
   'GET:/': 'getTestForUrl',
-  'GET:/click_variation_tw': 'clickVariationTW',
-  'GET:/click_variation_fb': 'clickVariationFB',
-  'POST:/share_variation_tw': 'shareVariationTW',
-  'POST:/share_variation_fb': 'shareVariationFB',
-  '!GET:/variation_tws': 'getVariationTWs',
-  '!POST:/variation_tw': 'saveVariationTW',
-  '!DELETE:/variation_tw': 'deleteVariationTW',
-  '!GET:/variation_fbs': 'getVariationFBs',
-  '!POST:/variation_fb': 'saveVariationFB',
-  '!DELETE:/variation_fb': 'deleteVariationFB',
+  'GET:/click_variation_tw':        'clickVariationTW',
+  'GET:/click_variation_fb':        'clickVariationFB',
+  'POST:/share_variation_tw':       'shareVariationTW',
+  'POST:/share_variation_fb':       'shareVariationFB',
+  'GET:/email_share_variation_fb':  'emailShareVariationFB',
+  'GET:/email_share_variation_tw':  'emailShareVariationTW',
+  '!GET:/variation_tws':            'getVariationTWs',
+  '!POST:/variation_tw':            'saveVariationTW',
+  '!DELETE:/variation_tw':          'deleteVariationTW',
+  '!GET:/variation_fbs':            'getVariationFBs',
+  '!POST:/variation_fb':            'saveVariationFB',
+  '!DELETE:/variation_fb':          'deleteVariationFB',
 }
 
 var _init = function(baseModel) {
@@ -48,6 +50,18 @@ methods.clickVariationTW = function(req, res) {
   _baseClickVariation(req, res, model.VariationTW, 'variation_tw');
 };
 
+methods.emailShareVariationTW = function(req, res) {
+  model.VariationTW.getByShortcode(req.params.shortcode, function(variation) {
+
+    if (!variation)
+      return error.json(res, 'TESTS_BAD_SHORTCODE');
+
+    model.VariationTW.logShare(variation.id);
+    var text = encodeURIComponent(variation.tweet_text +' ' + variation.url);
+    res.redirect('https://twitter.com/intent/tweet?text='+text);
+  });
+};
+
 methods.getVariationFBs = function(req, res) {
   _baseGetVariation(req, res, model.VariationFB, 'variation_fbs');
 }
@@ -66,6 +80,18 @@ methods.shareVariationFB = function(req, res) {
 
 methods.clickVariationFB = function(req, res) {
   _baseClickVariation(req, res, model.VariationFB, 'variation_fb');
+};
+
+methods.emailShareVariationFB = function(req, res) {
+  model.VariationFB.getByShortcode(req.params.shortcode, function(variation) {
+
+    if (!variation)
+      return error.json(res, 'TESTS_BAD_SHORTCODE');
+
+    model.VariationFB.logShare(variation.id);
+    var url = encodeURIComponent(variation.url);
+    res.redirect('https://www.facebook.com/sharer.php?u='+url);
+  });
 };
 
 methods.getTestForUrl = function(req, res) {
@@ -173,6 +199,8 @@ var _baseShareVariation = function(req, res, targetModel) {
     res.json('lol');
   });
 }
+
+
 
 var _baseClickVariation = function(req, res, targetModel, pageTemplate) {
   targetModel.getByShortcode(req.params.shortcode, function(variation) {

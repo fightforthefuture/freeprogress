@@ -32,9 +32,11 @@ var _init = function(baseController, auth) {
   // special routes lol
   router.post('/f/:shortcode', controller.tests.shareVariationFB);
   router.get('/f/:shortcode', controller.tests.clickVariationFB);
+  router.get('/fe/:shortcode', controller.tests.emailShareVariationFB);
 
   router.post('/t/:shortcode', controller.tests.shareVariationTW);
   router.get('/t/:shortcode', controller.tests.clickVariationTW);
+  router.get('/te/:shortcode', controller.tests.emailShareVariationTW);
 }
 
 module.exports = {
