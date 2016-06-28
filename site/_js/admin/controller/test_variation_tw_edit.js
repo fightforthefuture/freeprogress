@@ -1,7 +1,7 @@
 var TestVariationTWEditController = BaseTestVariationEditController.extend({
 
     elements: {
-        'input[name="tweet_text"]': 'tweet_text',
+        'textarea[name="tweet_text"]': 'tweet_text',
         'input[name="title"]': 'title',
         'input[name="description"]': 'description',
         // 'input[name="site"]': 'site',
