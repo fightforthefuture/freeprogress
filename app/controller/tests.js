@@ -212,25 +212,30 @@ var _baseClickVariation = function(req, res, targetModel, pageTemplate) {
     var user_agent      = req.headers['user-agent'] || '(none)';
 
     // never trust the client.
-    try {
-      var clicks = req.cookies.c ? JSON.parse(req.cookies.c) : [];
-    } catch(err) {
-      var clicks = [];
-    }
 
-    if (clicks)
-      for (var i = 0; i < clicks.length; i++)
-        if (clicks[i] == variation.shortcode)
-          shouldLogClick = false;
+    // JL NOTE ~ disable cookies because Privacy Badger :'(
+    // try {
+    //   var clicks = req.cookies.c ? JSON.parse(req.cookies.c) : [];
+    // } catch(err) {
+    //   var clicks = [];
+    // }
+    //
+    // if (clicks)
+    //   for (var i = 0; i < clicks.length; i++)
+    //     if (clicks[i] == variation.shortcode)
+    //       shouldLogClick = false;
 
     if (!variation.active)
       shouldLogClick = false;
 
     if (shouldLogClick) {
-      clicks.push(variation.shortcode);
-      res.cookie('c', JSON.stringify(clicks), {
-        expires: new Date(Date.now() + 900000)
-      });
+
+      // JL NOTE ~ disable cookies because Privacy Badger :'(
+      // clicks.push(variation.shortcode);
+      // res.cookie('c', JSON.stringify(clicks), {
+      //   expires: new Date(Date.now() + 900000)
+      // });
+
       targetModel.logClick(variation.id);
 
       model.UserAgentLog.create({ user_agent: user_agent });

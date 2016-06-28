@@ -1,11 +1,12 @@
 var express = require('express');
-var session = require('express-session');
 var compression = require('compression');
 var app = express();
-var cookieParser = require('cookie-parser');
+
+// JL NOTE ~ disable cookies because Privacy Badger :'(
+// var cookieParser = require('cookie-parser');
+
 var bodyParser = require('body-parser');
 var request = require('request');
-var RedisStore = require('connect-redis')(session);
 var keys = require('./config/keys');
 var path = require('path');
 var model = require('./model/_base');
@@ -17,18 +18,6 @@ controller._init(model);                     // Initialize controller from model
 var auth = require('./library/auth')(model); // Initialize security from model
 routes._init(controller, auth);              // Init router from controller
 
-var sessionInfo = {
-  secret: keys.session.secret,
-  resave: true,
-  saveUninitialized: true,
-  cookie: {maxAge: 600000}
-};
-
-if (keys.redis !== undefined) {
-  sessionInfo.store = new RedisStore({
-    url: keys.redis.url
-  });
-}
 
 app.use(compression({
   level: 6
@@ -46,12 +35,13 @@ app.use(express.static(path.join(__dirname, '../public'), {
   }
 }));
 
-app.use(cookieParser());
+// JL NOTE ~ disable cookies because Privacy Badger :'(
+// app.use(cookieParser());
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-app.use(session(sessionInfo));
 app.use(routes.router);
 app.listen(keys.port);
 
