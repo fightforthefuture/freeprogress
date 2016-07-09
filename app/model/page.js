@@ -204,7 +204,7 @@ var _init = function(baseModel) {
   setInterval(function() {
     console.log('Running variation tests...');
     model.Page.runVariationTests();
-  }, 300000);
+  }, 3000000);
 }
 
 module.exports = { _init: _init };
