@@ -48,6 +48,10 @@ var _init = function(baseModel) {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
+      conversions: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
       active: {
         type: Sequelize.BOOLEAN,
         index: true,
@@ -114,6 +118,7 @@ var _init = function(baseModel) {
         generateShortcode: _mixinGenerateShortcode,
         logClick: _mixinLogClick,
         logShare: _mixinLogShare,
+        logConvert: _mixinLogConvert,
         findAndDeactivateLosers: _mixinFindAndDeactivateLosers,
         _deactivateLosers: _mixin_deactivateLosers
       }
@@ -156,6 +161,10 @@ var _init = function(baseModel) {
         defaultValue: 0,
       },
       clicks: {
+        type: Sequelize.INTEGER,
+        defaultValue: 0,
+      },
+      conversions: {
         type: Sequelize.INTEGER,
         defaultValue: 0,
       },
@@ -230,6 +239,7 @@ var _init = function(baseModel) {
         generateShortcode: _mixinGenerateShortcode,
         logClick: _mixinLogClick,
         logShare: _mixinLogShare,
+        logConvert: _mixinLogConvert,
         findAndDeactivateLosers: _mixinFindAndDeactivateLosers,
         _deactivateLosers: _mixin_deactivateLosers
       }
@@ -483,6 +493,11 @@ var _mixinLogClick = function(id) {
 
 var _mixinLogShare = function(id) {
   this.update({shares: Sequelize.literal('shares +1')}, {where: {id: id}});
+}
+
+var _mixinLogConvert = function(id) {
+  this.update({conversions: Sequelize.literal('conversions +1')},
+    {where: {id: id}});
 }
 
 module.exports = { _init: _init };

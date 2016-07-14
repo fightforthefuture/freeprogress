@@ -10,7 +10,9 @@
 <meta name="twitter:account_id" content="{{ config.twitter_account_id }}" />
 
 <script type="text/javascript">
-window.location.replace('{{ url }}');
+var url = '{{url}}';
+url += (url.indexOf('?') === -1 ? '?' : '&') + '_fp=t_{{ shortcode }} ';
+window.location.replace(url);
 </script>
 <style type="text/css">
 body { color: white; }

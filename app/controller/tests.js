@@ -16,6 +16,8 @@ var _routes = {
   'GET:/click_variation_fb':        'clickVariationFB',
   'POST:/share_variation_tw':       'shareVariationTW',
   'POST:/share_variation_fb':       'shareVariationFB',
+  'POST:/convert_variation_tw':     'convertVariationTW',
+  'POST:/convert_variation_fb':     'convertVariationFB',
   'GET:/email_share_variation_fb':  'emailShareVariationFB',
   'GET:/email_share_variation_tw':  'emailShareVariationTW',
   '!GET:/variation_tws':            'getVariationTWs',
@@ -50,6 +52,10 @@ methods.clickVariationTW = function(req, res) {
   _baseClickVariation(req, res, model.VariationTW, 'variation_tw');
 };
 
+methods.convertVariationTW = function(req, res) {
+  _baseConvertVariation(req, res, model.VariationTW);
+};
+
 methods.emailShareVariationTW = function(req, res) {
   model.VariationTW.getByShortcode(req.params.shortcode, function(variation) {
 
@@ -80,6 +86,10 @@ methods.shareVariationFB = function(req, res) {
 
 methods.clickVariationFB = function(req, res) {
   _baseClickVariation(req, res, model.VariationFB, 'variation_fb');
+};
+
+methods.convertVariationFB = function(req, res) {
+  _baseConvertVariation(req, res, model.VariationFB);
 };
 
 methods.emailShareVariationFB = function(req, res) {
@@ -119,6 +129,22 @@ methods.getTestForUrl = function(req, res) {
   });
 }
 
+var _parseForm = function(req, callback) {
+  var form = new multiparty.Form();
+  var data = {};
+
+  form.parse(req, function(err, fields, files) {
+
+    var data = {};
+
+    for (var field in fields)
+      if (fields.hasOwnProperty(field))
+        data[field] = fields[field][0];
+
+    callback(data);
+  });
+};
+
 var _baseGetVariation = function(req, res, targetModel, resultKey) {
   res.set('Access-Control-Allow-Origin', '*');
 
@@ -136,19 +162,9 @@ var _baseGetVariation = function(req, res, targetModel, resultKey) {
 
 var _baseSaveVariation = function(req, res, targetModel, resultKey) {
   res.header("Access-Control-Allow-Origin", "*");
-
-  var form = new multiparty.Form();
-  var data = {};
   var result = {};
-  var image;
 
-  form.parse(req, function(err, fields, files) {
-
-    var data = {};
-
-    for (var field in fields)
-      if (fields.hasOwnProperty(field))
-        data[field] = fields[field][0];
+  _parseForm(req, function(data) {
 
     targetModel.saveBasicFields(data, function(err, created) {
       if (err)
@@ -169,18 +185,9 @@ var _baseSaveVariation = function(req, res, targetModel, resultKey) {
 
 var _baseDeleteVariation = function(req, res, targetModel) {
   res.header("Access-Control-Allow-Origin", "*");
+  var result = {};
 
-  var form = new multiparty.Form();
-  var data = {};
-  var image;
-
-  form.parse(req, function(err, fields, files) {
-
-    var data = {};
-
-    for (var field in fields)
-      if (fields.hasOwnProperty(field))
-        data[field] = fields[field][0];
+  _parseForm(req, function(data) {
 
     targetModel.destroy({where: {id: data.id}}).then(function(status) {
       console.log('deleted ', status, 'rows');
@@ -199,8 +206,6 @@ var _baseShareVariation = function(req, res, targetModel) {
     res.json('lol');
   });
 }
-
-
 
 var _baseClickVariation = function(req, res, targetModel, pageTemplate) {
   targetModel.getByShortcode(req.params.shortcode, function(variation) {
@@ -247,6 +252,21 @@ var _baseClickVariation = function(req, res, targetModel, pageTemplate) {
     res.send(tmpl(variation));
   });
 };
+
+var _baseConvertVariation = function(req, res, targetModel) {
+  res.header("Access-Control-Allow-Origin", "*");
+
+  _parseForm(req, function(data) {
+    targetModel.getByShortcode(data.shortcode, function(variation) {
+
+      if (!variation)
+        return error.json(res, 'TESTS_BAD_SHORTCODE');
+
+      targetModel.logConvert(variation.id);
+      res.json('lol');
+    });
+  });
+}
 
 module.exports = {
   _init: _init,

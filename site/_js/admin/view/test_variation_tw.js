@@ -25,6 +25,16 @@ var TestVariationTWView = function(data) {
     clicks.appendChild(span);
     stats.appendChild(clicks);
 
+    var conversions = $c('div');
+    conversions.className = 'conversions';
+    var caption = $c('strong');
+    caption.textContent = 'conversions:';
+    var span = $c('span');
+    span.textContent = data.conversions;
+    conversions.appendChild(caption);
+    conversions.appendChild(span);
+    stats.appendChild(conversions);
+
     frag.appendChild(stats);
 
     var actions = $c('ul');

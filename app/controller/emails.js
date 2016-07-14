@@ -4,7 +4,8 @@ var multiparty  = require('multiparty');
 var model;
 
 var _routes = {
-  'POST:/schedule': 'scheduleEmailForUrl'
+  'POST:/schedule': 'scheduleEmailForUrl',
+  'GET:/_test_send_mail': 'testSendMail',
 }
 
 var _init = function(baseModel) {
@@ -33,8 +34,21 @@ var scheduleEmailForUrl = function(req, res) {
 
 }
 
+var testSendMail = function(req, res) {
+  sendMail = require("../library/mailer")(model._util.config);
+  sendMail({
+    to:       "jeff@fightforthefuture.org",
+    from:     "jeff@fightforthefuture.org",
+    fromName: "Free Progress",
+    subject:  "This is a test.",
+    body:     "<h1>lol</h1>"
+  });
+  res.json('kthxbai');
+}
+
 module.exports = {
   _init: _init,
   _routes: _routes,
-  scheduleEmailForUrl: scheduleEmailForUrl
+  scheduleEmailForUrl: scheduleEmailForUrl,
+  testSendMail: testSendMail
 }

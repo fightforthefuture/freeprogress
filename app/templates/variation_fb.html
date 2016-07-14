@@ -8,7 +8,9 @@
 <meta property="og:site_name" content="{{ site_name }}">
 <meta property="og:type" content="website">
 <script type="text/javascript">
-window.location.replace('{{ url }}');
+var url = '{{url}}';
+url += (url.indexOf('?') === -1 ? '?' : '&') + '_fp=f_{{ shortcode }} ';
+window.location.replace(url);
 </script>
 <style type="text/css">
 body { color: white; }

@@ -6,6 +6,8 @@ var FreeProgress = {
     variation_tw: null
   },
 
+  apiUrl: '{{SITE_URL}}',
+
   init: function() {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
@@ -18,7 +20,7 @@ var FreeProgress = {
         }
       }
     }.bind(this);
-    xhr.open("get", '{{SITE_URL}}/tests?url='+window.location.href, true);
+    xhr.open("get", this.apiUrl+'/tests?url='+window.location.href, true);
     xhr.send();
 
     if (
@@ -95,5 +97,35 @@ var FreeProgress = {
 
     window.open(url, 'share_tw', properties);
   },
+
+  convert: function() {
+    var
+      i,
+      pairs,
+      queryObject = {},
+      queryString = window.location.search;
+
+    if (queryString[0] === '?')
+      queryString = queryString.substr(1);
+
+    pairs = queryString.split('&');
+    i = pairs.length;
+
+    while (i--)
+      queryObject[pairs[i].split('=')[0]] = pairs[i].split('=')[1];
+
+    if (typeof(queryObject['_fp']) === 'undefined')
+      return;
+
+    var shortcode = queryObject['_fp'].substr(2),
+        testType  = queryObject['_fp'].charAt(0) == 't' ? 'tw' : 'fb',
+        xhr       = new XMLHttpRequest(),
+        data      = new FormData();
+
+    data.append('shortcode', shortcode);
+
+    xhr.open("post", this.apiUrl+'/tests/convert_variation_'+testType, true);
+    xhr.send(data);
+  }
 };
 FreeProgress.init();
