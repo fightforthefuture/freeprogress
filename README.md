@@ -28,7 +28,7 @@ it on any server that supports Node.js.
 * **[An Action Network account][7]** _(optional)_ used to verify subscribers
                                       before sending emails
 
-## Installation
+## Installation and Setup
 
 ### Install the dependencies
 
@@ -119,7 +119,21 @@ Here are the specific environment variables, and what they do:
   `less-emails` tag you set up on Action Network. More information in the
   scheduled emails section.
 
+### Running the server
 
+Once your packages are installed and your environment variables are setup in the
+`.env` file, you can run the server:
+
+```
+  source .env
+  npm start
+```
+
+If all goes well, you should see the grunt tasks running and then something like
+`‼  Server running at http://0.0.0.0:9002 ‼`.
+
+**Note:** The first time the server runs, it will automatically create the
+database tables, if they don't already exist.
 
 
 
