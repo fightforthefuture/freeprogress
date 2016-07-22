@@ -296,8 +296,8 @@ using a Free Progress tracking link. You can directly call
 pop a sharing window.
 
 ```javascript
-FreeProgress.share()        // open a Facebook sharing window
-FreeProgress.tweet()        // open a Twitter sharing window
+FreeProgress.share();       // open a Facebook sharing window
+FreeProgress.tweet();       // open a Twitter sharing window
 ```
 
 
@@ -309,11 +309,32 @@ it's just displayed in the Free Progress Admin. At some point we may enable
 conversion-based variation ranking at the Page level.
 
 ```javascript
-FreeProgress.convert()      // tell Free Progress that the user "converted"
+FreeProgress.convert();     // tell Free Progress that the user "converted"
+                            // (this has no effect if the user did not enter the
+                            // page from a Free Progress sharing link)
 ```
 
 **NOTE:** Whatever user action you decide is a "conversion" is completely up to
 you. Free Progress doesn't know or care, so you'll have to call this manually.
+
+
+### Using the Free Progress Admin
+
+**Visit http://YOUR-FREE-PROGRESS-DOMAIN/admin to view the Free Progress Admin**
+
+The Free Progress Admin is where you can create new sharing variations for your
+pages and view stats. When a user clicks a sharing button on one of your pages,
+one of the active variations for that page is randomly selected to be shared
+using a redirection link that allows Free Progress to measure clicks.
+
+Free Progress will periodically check the sharing stats for your page and
+deactivate any variations that are determined to be statistically less-effective
+than others. Eventually a winner will automatically be selected with no need to
+babysit the process.
+
+![](https://s3.fightforthefuture.org/images/documentation/freeprogress_admin.png)
+
+The interface is not pretty, but it should be fairly self-explanatory.
 
 
 
