@@ -29,6 +29,11 @@ it on any server that supports Node.js.
     * **[Handling user share and tweet actions](#handling-user-share-and-tweet-actions)**
     * **[Measuring conversions](#measuring-conversions)**
   * **[Using the Free Progress Admin](#using-the-free-progress-admin)**
+  * **[Scheduling Sharing Autoresponder Emails](#scheduling-sharing-autoresponder-emails)**
+    * **[POST `/emails/schedule` to schedule an email](#post-emailsschedule-to-schedule-an-email)**
+    * **[More info on Action Network integration](#more-info-on-action-network-integration)**
+    * **[A word about unsubscribing](#a-word-about-unsubscribing)**
+* **[Getting Help & Contributing](#getting-help--contributing)**
 
 ## Service dependencies
 
