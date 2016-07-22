@@ -271,6 +271,50 @@ variations when people share the site on Twitter.
   specific to Free Progress and will automatically populate the tweet text when
   the user clicks on a Twitter sharing link (the user can edit this tweet).
 
+##### Sharing Autoresponder Email meta tags
+
+If you have the `EMAIL_SCHEDULER` environment variable turned `on` and use the
+Free Progress Email Scheduler API to schedule sharing autoresponder emails,
+these meta tags will be scraped each time a scheduled email goes out for that
+page. See the API documentation for more information.
+
+* **`<meta name="autoresponder_subject" content="Don't forget to share!" />`**:
+  The subject of the delayed sharing autoresponder email
+
+* **`<meta name="autoresponder_body" content="Blah blah|Second paragraph" />`**:
+  The text to use in the body of the sharing autoresponder. If you absolutely
+  can't keep it short, use the vertical pipe (`|`) character to separate
+  paragraphs.
+
+
+#### Handling user share and tweet actions
+
+By default, any links or buttons with the `.twitter` or `.facebook` CSS classes
+will automatically open up in a sharing window on the appropriate social network
+using a Free Progress tracking link. You can directly call
+`FreeProgress.share()` and 'FreeProgress.tweet()` from your JavaScript code to
+pop a sharing window.
+
+```javascript
+FreeProgress.share()        // open a Facebook sharing window
+FreeProgress.tweet()        // open a Twitter sharing window
+```
+
+
+#### Measuring conversions
+
+In addition to tracking sharing stats, Free Progress can also track conversions
+for your variations. Currently conversion information is not used for anything;
+it's just displayed in the Free Progress Admin. At some point we may enable
+conversion-based variation ranking at the Page level.
+
+```javascript
+FreeProgress.convert()      // tell Free Progress that the user "converted"
+```
+
+**NOTE:** Whatever user action you decide is a "conversion" is completely up to
+you. Free Progress doesn't know or care, so you'll have to call this manually.
+
 
 
 [1]: https://nodejs.org/en/
