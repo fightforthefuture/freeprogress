@@ -145,7 +145,7 @@ Here are the specific environment variables, and what they do:
 
 * **`ACTIONNETWORK_LESS_EMAILS_TAG`**: The Action Network ID for the
   `less-emails` tag you set up on Action Network. More information in the
-  scheduled emails section.
+  [scheduled emails section](#scheduling-sharing-autoresponder-emails).
 
 
 ### Running the server
@@ -300,7 +300,8 @@ variations when people share the site on Twitter.
 If you have the `EMAIL_SCHEDULER` environment variable turned `on` and use the
 Free Progress Email Scheduler API to schedule sharing autoresponder emails,
 these meta tags will be scraped each time a scheduled email goes out for that
-page. See the API documentation for more information.
+page. See the [section on scheduled emails](#scheduling-sharing-autoresponder-emails)
+for more information.
 
 * **`<meta name="autoresponder_subject" content="Don't forget to share!" />`**:
   The subject of the delayed sharing autoresponder email
