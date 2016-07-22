@@ -18,6 +18,7 @@ it on any server that supports Node.js.
 
 ## Table of Contents
 
+* **[Service Dependencies](#service-dependencies)**
 * **[Installation and Setup](#installation-and-setup)**
   * **[Install the dependencies](#install-the-dependencies)**
   * **[Configure the environment variables](#configure-the-environment-variables)**
@@ -471,6 +472,7 @@ PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with Free Progress. If not, see [http://www.gnu.org/licenses/][16].
+
 
 [1]: https://nodejs.org/en/
 [2]: https://www.npmjs.com/
