@@ -232,6 +232,8 @@ Follow [Facebook's guidelines][9] to choose good sharing tags for your page.
 You can always set up more variations in Free Progress Admin if you want to try
 new ideas!
 
+![](https://s3.fightforthefuture.org/images/documentation/freeprogress_facebook.png)
+
 * **`<meta property="og:title" content="My page is not clickbait..." />`**:
   The title you want for your Facebook sharing summary. Make it clicky!
 
@@ -249,6 +251,8 @@ new ideas!
 Follow [Twitter's documentation][10] to set up your Twitter Card sharing tags.
 These will enable Free Progress to display a graphical summary of your sharing
 variations when people share the site on Twitter.
+
+![](https://s3.fightforthefuture.org/images/documentation/freeprogress_twitter.png)
 
 * **`<meta name="twitter:site" content="fightfortheftr" />`**:
   This should always be your Twitter username.
