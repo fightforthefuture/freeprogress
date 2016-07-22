@@ -34,6 +34,7 @@ it on any server that supports Node.js.
     * [More info on Action Network integration](#more-info-on-action-network-integration)
     * [A word about unsubscribing](#a-word-about-unsubscribing)
 * **[Getting Help & Contributing](#getting-help--contributing)**
+* **[License](#license)**
 
 ## Service dependencies
 
@@ -457,6 +458,19 @@ question or comment that you'd rather not share with the whole class. I'll do my
 best to help!
 
 
+## License
+
+Free Progress is free software: you can redistribute it and/or modify it under
+the terms of the GNU General Public License as published by the Free Software
+Foundation, either version 3 of the License, or (at your option) any later
+version.
+
+Free Progress is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with Free Progress. If not, see [http://www.gnu.org/licenses/][16].
 
 [1]: https://nodejs.org/en/
 [2]: https://www.npmjs.com/
@@ -473,3 +487,4 @@ best to help!
 [13]: https://developers.sparkpost.com/api/suppression-list
 [14]: https://github.com/fightforthefuture/freeprogress/issues
 [15]: https://github.com/fightforthefuture/freeprogress/pulls
+[16]: http://www.gnu.org/licenses/
