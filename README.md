@@ -21,18 +21,18 @@ it on any server that supports Node.js.
 * **[Installation and Setup](#installation-and-setup)**
   * **[Install the dependencies](#install-the-dependencies)**
   * **[Configure the environment variables](#configure-the-environment-variables)**
-  * **[Running the server](#running-the-server)**]
+  * **[Running the server](#running-the-server)**
   * **[Turn on Domain Security (Optional)](#turn-on-domain-security-optional)**
 * **[Using Free Progress](#using-free-progress)**
   * **[Using the Free Progress JavaScript Client](#using-the-free-progress-javascript-client)**
-    * **[Auto-discovery of pages based on sharing meta tags](#auto-discovery-of-pages-based-on-sharing-meta-tags)**
-    * **[Handling user share and tweet actions](#handling-user-share-and-tweet-actions)**
-    * **[Measuring conversions](#measuring-conversions)**
+    * [Auto-discovery of pages based on sharing meta tags](#auto-discovery-of-pages-based-on-sharing-meta-tags)
+    * [Handling user share and tweet actions](#handling-user-share-and-tweet-actions)
+    * [Measuring conversions](#measuring-conversions)
   * **[Using the Free Progress Admin](#using-the-free-progress-admin)**
   * **[Scheduling Sharing Autoresponder Emails](#scheduling-sharing-autoresponder-emails)**
-    * **[POST `/emails/schedule` to schedule an email](#post-emailsschedule-to-schedule-an-email)**
-    * **[More info on Action Network integration](#more-info-on-action-network-integration)**
-    * **[A word about unsubscribing](#a-word-about-unsubscribing)**
+    * [POST `/emails/schedule` to schedule an email](#post-emailsschedule-to-schedule-an-email)
+    * [More info on Action Network integration](#more-info-on-action-network-integration)
+    * [A word about unsubscribing](#a-word-about-unsubscribing)
 * **[Getting Help & Contributing](#getting-help--contributing)**
 
 ## Service dependencies
