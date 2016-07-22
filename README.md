@@ -18,10 +18,23 @@ it on any server that supports Node.js.
 
 ## Table of Contents
 
+* **[Installation and Setup](#installation-and-setup)**
+  * **[Install the dependencies](#install-the-dependencies)**
+  * **[Configure the environment variables](#configure-the-environment-variables)**
+  * **[Running the server](#running-the-server)**]
+  * **[Turn on Domain Security (Optional)](#turn-on-domain-security-optional)**
+* **[Using Free Progress](#using-free-progress)**
+  * **[Using the Free Progress JavaScript Client](#using-the-free-progress-javascript-client)**
+    * **[Auto-discovery of pages based on sharing meta tags](#auto-discovery-of-pages-based-on-sharing-meta-tags)**
+    * **[Handling user share and tweet actions](#handling-user-share-and-tweet-actions)**
+    * **[Measuring conversions](#measuring-conversions)**
+  * **[Using the Free Progress Admin](#using-the-free-progress-admin)**
+
 ## Service dependencies
 
 * **[Node.js][1]**
 * **[npm][2]**
+* **[ruby 2.2.3][11]:** for building and running the server
 * **[Postgresql][3]**
 * **[Amazon AWS S3 API][4]:** for image storage
 * **[A twitter account][5]**
@@ -55,6 +68,10 @@ Here are the specific environment variables, and what they do:
 
 * **`URL`**: The base URL for the Free Progress server app. No trailing slash!
 
+* **`ADMIN_USERNAME`**: Username for Free Progress Admin
+
+* **`ADMIN_PASSWORD`**: Password for Free Progress Admin
+
 * **`DB_NAME`**: Postgres database name
 
 * **`DB_USER`**: Postgres database username
@@ -66,7 +83,7 @@ Here are the specific environment variables, and what they do:
 * **`DB_PORT`**: Postgres database port
 
 * **`DB_PREFIX`**: This prefix is appended to any tables created in the database
-  by Free Progress. Useful if you're using one database to server multiple apps.
+  by Free Progress. Useful if you're using one database to serve multiple apps.
 
 * **`AWS_ACCESS_KEY`**: Access key for Amazon S3
 
@@ -141,7 +158,7 @@ If all goes well, you should see the grunt tasks running and then something like
 database tables, if they don't already exist.
 
 
-### Install the Free Progress JavaScript Client on your site
+### Install the Free Progress JavaScript Client on your site(s)
 
 Once you have the Free Progress server running, you can add the JavaScript
 Client to your site. Just add this script tag before the closing `</BODY>`:
@@ -219,12 +236,12 @@ less-effective ones.
 #### Auto-discovery of pages based on sharing meta tags
 
 Free Progress Server will automatically detect any new pages that include the
-Client script and scrape the Facebook Open Graph and Twitter Card tags to grab
-the initial sharing variations for these social networks.
+Client script. The Server will scrape the Facebook Open Graph and Twitter Card
+tags to grab the initial sharing variations for these social networks.
 
 **NOTE:** Auto-discovery only happens once, so if you change your sharing meta
 tags after Free Progress scrapes the page, you'll also want to add new
-variations in the Free Progress Admin.
+variations in the [Free Progress Admin](#using-the-free-progress-admin).
 
 ##### Facebook Open Graph meta tags
 
@@ -332,9 +349,107 @@ deactivate any variations that are determined to be statistically less-effective
 than others. Eventually a winner will automatically be selected with no need to
 babysit the process.
 
+Domains and pages that show up in the admin are automatically added by the Free
+Progress JavaScript Client. There is no need (or way) to manually set up domains
+and pages in the Free Progress Admin.
+
 ![](https://s3.fightforthefuture.org/images/documentation/freeprogress_admin.png)
 
 The interface is not pretty, but it should be fairly self-explanatory.
+
+
+### Scheduling Sharing Autoresponder Emails
+
+Free Progress can optionally send autoresponder emails prompting your users to
+share your pages. Using an API call, you can schedule these to be sent after a
+certain number of hours (for example 72 hours after a user originally takes
+action on one of your pages). Emails will be sent using content scraped from the
+[Sharing Autoresponder Email meta tags](#sharing-autoresponder-email-meta-tags)
+on a given page. These will always be re-scraped before any email is sent, so
+emails will always reflect the most up-to-date content in your meta tags.
+
+Optionally, the email scheduler can integrate with your [Action Network][7]
+account, if you have one. This will verify that recipients are subscribed to
+your mailing list before sending, thus preventing emails from being sent to
+people who may have unsubscribed.
+
+As a further option, the autoresponder emails can be disabled for Action Network
+users who have a tag of your choosing. For example, users may wish to opt-out
+of receiving autoresponder emails while still remaining subscribed to your list.
+Free Progress abides.
+
+#### POST `/emails/schedule` to schedule an email
+
+**Request Parameters**
+
+* `email`: (String Email) The email address to schedule a sharing reminder for
+
+* `url`: (String URL) The page URL to use in the sharing reminder. If
+  `DOMAIN_SECURITY` is turned `on`, then this must be from an authorized domain.
+
+* `hours`: (Integer) number of hours to wait before sending, eg. `72`
+
+* `external_network`: (String, optional) Currently only `action-network` is a
+  supported value if this parameter is passed
+
+* `external_network_id`: (String, optional) The User ID for the user on the
+  specified external network. So currently, this could only be the Action
+  Network User ID.
+
+**Response Format**
+
+If the request succeeds, you will receive a JSON string containing `kthxbai`.
+
+#### More info on Action Network integration
+
+When a POST request to `/emails/schedule` comes in that specifies
+`external_network=action-network`, the following steps will be performed:
+
+1. A task will be scheduled for the specified number of `hours`.
+
+2. Once the task executes, if the `ACTIONNETWORK_INTEGRATION` environment
+   variable is not turned `on`, the task will be aborted and deleted.
+
+3. The Action Network API will be queried for the User ID specified in the
+   `external_network_id` parameter. If the user does not exist or is
+   unsubscribed, the task will be aborted and deleted.
+
+4. The Action Network API will be queried to see if the user has a tag with the
+   ID specified in the `ACTIONNETWORK_LESS_EMAILS_TAG` environment variable.
+   If the user is tagged to receive less emails, the task will be aborted and
+   deleted.
+
+5. If we get to this point without aborting and deleting the task, the sharing
+   autoresponder email will be sent out using the content specified in the
+   [Sharing Autoresponder meta tags](#sharing-autoresponder-email-meta-tags) for
+   the specified `url`.
+
+#### A word about unsubscribing
+
+You are responsible for providing a link that will unsubscribe users from
+receiving emails. Free Progress will not do this for you. If you use the Action
+Network integration, you should have a page similar to the
+[Fight for the Future Subscription Management Page][12] that can unsubscribe
+users from Action Network.
+
+If you're not using the Action Network integration, then you need to build an
+unsubscribe page that will add a suppression entry directly on SparkPost, using
+the [SparkPost API][13].
+
+Your unsubscribe page must be specified in the `EMAIL_UNSUBSCRIBE_URL`
+environment variable.
+
+
+## Getting Help & Contributing
+
+Please feel free to submit [Issues][14] if you're having a problem with Free
+Progress. If you're handy with Node.js and you want to submit a new feature,
+please fork the project and submit a [Pull Request][15]!
+
+Feel free to email me at
+[jeff@fightforthefuture.org](mailto:jeff@fightforthefuture.org) if you have a
+question or comment that you'd rather not share with the whole class. I'll do my
+best to help!
 
 
 
@@ -348,3 +463,8 @@ The interface is not pretty, but it should be fairly self-explanatory.
 [8]: http://www.xorbin.com/tools/sha256-hash-calculator
 [9]: https://developers.facebook.com/docs/sharing/best-practices#tags
 [10]: https://dev.twitter.com/cards/markup
+[11]: https://www.ruby-lang.org/en/
+[12]: https://www.fightforthefuture.org/subscription
+[13]: https://developers.sparkpost.com/api/suppression-list
+[14]: https://github.com/fightforthefuture/freeprogress/issues
+[15]: https://github.com/fightforthefuture/freeprogress/pulls

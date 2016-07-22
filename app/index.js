@@ -15,7 +15,7 @@ var routes = require('./config/routes');
 
 model._init(keys.db, keys.aws, keys.config); // Initialize model from keys
 controller._init(model);                     // Initialize controller from model
-var auth = require('./library/auth')(model); // Initialize security from model
+var auth = require('./library/auth')(model, keys.admin, keys.session);
 routes._init(controller, auth);              // Init router from controller
 
 

@@ -1,10 +1,15 @@
-var basicAuth = require('basic-auth');
-var error = require('./error');
+var basicAuth = require('basic-auth'),
+    error = require('./error'),
+    hash = require('sha.js');
 
-var model = null;
+var model = null,
+    credentials = null,
+    session = null;
 
-module.exports = function(initializedModel) {
+module.exports = function(initializedModel, adminCredentials, sessionInfo) {
   model = initializedModel;
+  credentials = adminCredentials;
+  session = sessionInfo;
 
   return function (req, res, callback) {
     var unauthorized = function(res) {
@@ -18,12 +23,15 @@ module.exports = function(initializedModel) {
       return unauthorized(res);
     };
 
+    var apiKeySeed = session.secret + credentials.user + credentials.pass,
+        correctApiKey = hash('sha256').update(apiKeySeed).digest('hex');
+
     if (
-      user.name === 'foo' && user.pass === 'bar'
+      user.name === credentials.user && user.pass === credentials.pass
       ||
-      user.name === 'api_key' && user.pass === 'lol'
+      user.name === 'api_key' && user.pass === correctApiKey
     ) {
-      res.cookie('api_key', 'lol', { maxAge: 900000 });
+      res.cookie('api_key', correctApiKey, { maxAge: 900000 });
       return callback();
     } else {
       return unauthorized(res);

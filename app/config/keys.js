@@ -20,6 +20,10 @@ module.exports = {
     prefix: env.get('db').prefix
   },
   port: env.get('port'),
+  admin: {
+    user:   env.get('admin').username,
+    pass:   env.get('admin').password
+  },
   aws: {
     access_key: env.get('aws').access_key,
     secret_key: env.get('aws').secret_key,

@@ -2,7 +2,7 @@
   "name": "freeprogress",
   "version": "0.0.1",
   "description": "This lets us A/B test on sharing text.",
-  "license": "GPL-3.0",
+  "license": "GPL-3.0-or-later",
   "author": [
     {
       "name": "Jeff Lyon",
