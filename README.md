@@ -30,9 +30,11 @@ it on any server that supports Node.js.
 
 ## Installation and Setup
 
+
 ### Install the dependencies
 
 Just cd to whatever directory you installed the code into and run `npm install`.
+
 
 ### Configure the environment variables
 
@@ -119,6 +121,7 @@ Here are the specific environment variables, and what they do:
   `less-emails` tag you set up on Action Network. More information in the
   scheduled emails section.
 
+
 ### Running the server
 
 Once your packages are installed and your environment variables are setup in the
@@ -136,6 +139,69 @@ If all goes well, you should see the grunt tasks running and then something like
 database tables, if they don't already exist.
 
 
+### Install the Free Progress JavaScript client on your site
+
+Once you have the Free Progress server running, you can add the JavaScript
+client to your site. Just add this script tag before the closing `</BODY>`:
+
+```html
+  <script type="text/javascript" src="//YOUR-DOMAIN/js/client.js"></script>
+```
+
+(obviously substitute `YOUR-DOMAIN` with whatever domain Free Progress is
+running on. For local testing this is usually `localhost:9002`)
+
+
+### Turn on Domain Security
+
+By default, Free Progress will automatically "discover" any page the JavaScript
+client is hosted on and add it to the database. You can turn on Domain Security
+to restrict this feature to domains you authorize, which prevents third parties
+from using your Free Progress instance without permission. It is surprisingly
+common for shady sites to scrape and re-host your content, so Domain Security is
+recommended for production deployments.
+
+To use Domain Security, perform the following steps:
+
+1. the `DOMAIN_SECURITY` environment variable must be set to `on`, and the
+   `DOMAIN_SECURITY_TOKEN` should be set to an arbitrary string that must be
+   kept private.
+
+2. Place a file called `freeprogress.txt` in the root of your site. This file
+   must contain a [SHA-256 hash][8] of your `DOMAIN_SECURITY_TOKEN` value
+   prepended to the full domain of your site.
+
+   For example, if your `DOMAIN_SECURITY_TOKEN` is `lol`, and your site domain
+   is `www.omg.com`, the hash would be computed as:
+
+   ```
+    SHA256('lolwww.omg.com')
+    # 628abb24a6c9da75d3f548a9a6d047541fd546c052f9a1f46a26e3ceb37fb423
+   ```
+
+   The contents of `freeprogress.txt` should be only the hexadecimal value of
+   the SHA-256 hash digest.
+
+3. That's all you need to do! When `DOMAIN_SECURITY` is set to `on` and the
+   Free Progress JavaScript client is activated on a domain that isn't yet in
+   the database, the Free Progress server will scrape the `freeprogress.txt`
+   file from your domain and make sure it matches the correct hash, as generated
+   from the private `DOMAIN_SECURITY_TOKEN` value and your domain name.
+
+**NOTE:** This configuration means you can't use `http://domain.com` and
+`http://www.domain.com` interchangeably. Free Progress page discovery will only
+work on the subdomain that you generate the domain security hash from.
+
+**NOTE 2:** If `DOMAIN_SECURITY` is turned on but the `freeprogress.txt` file is
+missing or invalid for a particular domain, the Free Progress JavaScript client
+will fallback to directly sharing based on the meta tags on that particular
+page, bypassing the Free Progress server's share and click tracking redirect
+URLs.
+
+
+
+
+
 
 
 
@@ -146,3 +212,4 @@ database tables, if they don't already exist.
 [5]: https://twitter.com
 [6]: https://www.sparkpost.com/
 [7]: https://actionnetwork.org/
+[8]: http://www.xorbin.com/tools/sha256-hash-calculator
