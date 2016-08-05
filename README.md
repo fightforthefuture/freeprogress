@@ -68,8 +68,7 @@ repo). Then, edit the `.env` file and configure these to your liking.
 
 Here are the specific environment variables, and what they do:
 
-* **`SESSION_SECRET`**: Set this to an arbitrary string, and keep it private. It
-  is used for hashing of session tokens (when sessions are enabled)
+* **`SESSION_SECRET`**: Set this to an arbitrary string, and keep it private.
 
 * **`PORT`**: What port to run the server on. Not needed on Heroku / production.
 
