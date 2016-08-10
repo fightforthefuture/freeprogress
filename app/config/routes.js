@@ -37,6 +37,8 @@ var _init = function(baseController, auth) {
   router.post('/t/:shortcode', controller.tests.shareVariationTW);
   router.get('/t/:shortcode', controller.tests.clickVariationTW);
   router.get('/te/:shortcode', controller.tests.emailShareVariationTW);
+
+  router.get('*', controller.pages.catchAll);
 }
 
 module.exports = {

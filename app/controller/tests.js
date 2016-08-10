@@ -1,5 +1,5 @@
 var error       = require('../library/error');
-var multiparty  = require('multiparty');
+var util        = require('../library/util');
 var template    = require('swig');
 
 var model;
@@ -62,9 +62,9 @@ methods.emailShareVariationTW = function(req, res) {
     if (!variation)
       return error.json(res, 'TESTS_BAD_SHORTCODE');
 
-    model.VariationTW.logShare(variation.id);
-    var text = encodeURIComponent(variation.tweet_text +' ' + variation.url);
-    res.redirect('https://twitter.com/intent/tweet?text='+text);
+    model.logShare(variation.id);
+
+    return util.redirectShareTwitter(res, variation);
   });
 };
 
@@ -98,9 +98,9 @@ methods.emailShareVariationFB = function(req, res) {
     if (!variation)
       return error.json(res, 'TESTS_BAD_SHORTCODE');
 
-    model.VariationFB.logShare(variation.id);
-    var url = encodeURIComponent(variation.url);
-    res.redirect('https://www.facebook.com/sharer.php?u='+url);
+    model.logShare(variation.id);
+
+    return util.redirectShareFacebook(res, variation);
   });
 };
 
@@ -129,21 +129,7 @@ methods.getTestForUrl = function(req, res) {
   });
 }
 
-var _parseForm = function(req, callback) {
-  var form = new multiparty.Form();
-  var data = {};
 
-  form.parse(req, function(err, fields, files) {
-
-    var data = {};
-
-    for (var field in fields)
-      if (fields.hasOwnProperty(field))
-        data[field] = fields[field][0];
-
-    callback(data);
-  });
-};
 
 var _baseGetVariation = function(req, res, targetModel, resultKey) {
   res.set('Access-Control-Allow-Origin', '*');
@@ -164,7 +150,7 @@ var _baseSaveVariation = function(req, res, targetModel, resultKey) {
   res.header("Access-Control-Allow-Origin", "*");
   var result = {};
 
-  _parseForm(req, function(data) {
+  util.parseForm(req, function(data) {
 
     targetModel.saveBasicFields(data, function(err, created) {
       if (err)
@@ -187,7 +173,7 @@ var _baseDeleteVariation = function(req, res, targetModel) {
   res.header("Access-Control-Allow-Origin", "*");
   var result = {};
 
-  _parseForm(req, function(data) {
+  util.parseForm(req, function(data) {
 
     targetModel.destroy({where: {id: data.id}}).then(function(status) {
       console.log('deleted ', status, 'rows');
@@ -256,7 +242,7 @@ var _baseClickVariation = function(req, res, targetModel, pageTemplate) {
 var _baseConvertVariation = function(req, res, targetModel) {
   res.header("Access-Control-Allow-Origin", "*");
 
-  _parseForm(req, function(data) {
+  util.parseForm(req, function(data) {
     targetModel.getByShortcode(data.shortcode, function(variation) {
 
       if (!variation)

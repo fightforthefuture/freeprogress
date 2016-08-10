@@ -1,5 +1,19 @@
 var Page = Composer.Model.extend({
+  save: function(data, callback) {
+    console.log('saving: ', data);
+
+    this.set(data);
+
+    api.post('/pages', this.toJSON(), function(err, result) {
+      if (err)
+        return callback(err, null)
+
+      this.set(result['page']);
+      callback(null, this);
+    }.bind(this));
+  },
 });
+
 var Pages = Composer.Collection.extend({
   model: Page,
 

@@ -11,14 +11,22 @@ var TestDashboardController = Composer.Controller.extend({
   events: {
     'click a.new_variation_fb': 'newVariationFB',
     'click a.new_variation_tw': 'newVariationTW',
+    'click a.edit_shortcode_tw': 'editShortcodeTW',
+    'click a.edit_shortcode_fb': 'editShortcodeFB',
   },
+
+  apiUrl: '{{SITE_URL}}',
 
   init: function() {
     this.render();
+
   },
 
   render: function() {
-    this.html(TestDashboardView());
+    var data = this.page.toJSON();
+    data.shortcode_tw_url = this.apiUrl + '/' + data.shortcode_tw;
+    data.shortcode_fb_url = this.apiUrl + '/' + data.shortcode_fb;
+    this.html(TestDashboardView(data));
 
     this.variation_fbs = new VariationFBs().populateFromPage(this.page);
     this.variation_tws = new VariationTWs().populateFromPage(this.page);
@@ -82,5 +90,31 @@ var TestDashboardController = Composer.Controller.extend({
       console.log('adding model lol: ', model);
       this.variation_tws.add(model);
     }.bind(this));
-  }
+  },
+
+  editShortcodeTW: function(e) {
+    if (e)
+      e.preventDefault();
+
+    var controller = new PageShortcodeEditController({
+      type: 'Twitter',
+      model: this.page
+    });
+    this.with_bind_once(controller, 'saved', function(shortcode) {
+      this.init();
+    }.bind(this));
+  },
+
+  editShortcodeFB: function(e) {
+    if (e)
+      e.preventDefault();
+
+    var controller = new PageShortcodeEditController({
+      type: 'Facebook',
+      model: this.page
+    });
+    this.with_bind_once(controller, 'saved', function(shortcode) {
+      this.init();
+    }.bind(this));
+  },
 });

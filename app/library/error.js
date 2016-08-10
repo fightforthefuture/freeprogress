@@ -19,6 +19,18 @@ module.exports = {
     'msg':  'An error occured while scraping freeprogress.txt from this domain',
     'code': 400
   },
+  PAGES_NOT_FOUND: {
+    'msg':  'The specified page was not found.',
+    'code': 404
+  },
+  PAGES_SHORTCODE_TAKEN: {
+    'msg':  'The specified shortcode is already taken.',
+    'code': 401
+  },
+  PAGES_UPDATE_ERROR: {
+    'msg':  'Could not update the page.',
+    'code': 500
+  },
   TESTS_BAD_URL: {
     'msg':  'An invalid URL was passed.',
     'code': 400
