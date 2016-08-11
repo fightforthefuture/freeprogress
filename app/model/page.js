@@ -208,12 +208,12 @@ var _init = function(baseModel) {
           var fb = sha1(new Date().toISOString()+Math.random()).substr(0, 6),
               tw = sha1(Math.random()+new Date().toISOString()).substr(1, 7);
 
-          this.findAll(this._shortcodeSearchQuery(fb)).then(function(models1) {
+          this.findAll(this.shortcodeSearchQuery(fb)).then(function(models1) {
             if (models1.length) {
               console.log('SHORTCODE COLLISION OMG OMG:', fb);
               return this.generateShortcode(callback);
             }
-            this.findAll(this._shortcodeSearchQuery(tw)).then(function(models2){
+            this.findAll(this.shortcodeSearchQuery(tw)).then(function(models2){
               if (models2.length) {
                 console.log('SHORTCODE COLLISION OMG OMG:', tw);
                 return this.generateShortcode(callback);
