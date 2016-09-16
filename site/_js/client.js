@@ -20,7 +20,13 @@ var FreeProgress = {
         }
       }
     }.bind(this);
-    xhr.open("get", this.apiUrl+'/tests?url='+window.location.href, true);
+    var testUrl = window.location.href;
+
+    var override = document.querySelector('meta[name="freeprogress:pageurl"]');
+    if (override && override.content)
+      testUrl = override.content;
+
+    xhr.open("get", this.apiUrl+'/tests?url='+testUrl, true);
     xhr.send();
 
     if (

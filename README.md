@@ -29,6 +29,7 @@ it on any server that supports Node.js.
     * [Auto-discovery of pages based on sharing meta tags](#auto-discovery-of-pages-based-on-sharing-meta-tags)
     * [Handling user share and tweet actions](#handling-user-share-and-tweet-actions)
     * [Measuring conversions](#measuring-conversions)
+    * [Overriding the sharing url](#overriding-the-sharing-url)
   * **[Using the Free Progress Admin](#using-the-free-progress-admin)**
   * **[Scheduling Sharing Autoresponder Emails](#scheduling-sharing-autoresponder-emails)**
     * [POST `/emails/schedule` to schedule an email](#post-emailsschedule-to-schedule-an-email)
@@ -118,6 +119,9 @@ Here are the specific environment variables, and what they do:
 * **`DOMAIN_SECURITY_TOKEN`**: An arbitrary private string to generate the hash
   for domain security token strings from
 
+* **`DOMAIN_SECURITY_WHITELIST`**: A comma-separated list of domains that are
+  automatically whitelisted for access to Free Progress
+
 * **`SPARKPOST_API_KEY`**: API key for SparkPost. Only needed if sending emails.
 
 * **`ALERTS_SENDING`**: (`on` or `off`) Whether to send error alert emails to
@@ -186,7 +190,12 @@ from using your Free Progress instance without permission. It is surprisingly
 common for shady sites to scrape and re-host your content, so Domain Security is
 recommended for production deployments.
 
-To use Domain Security, perform the following steps:
+You can specify a list of allowed domains in the `DOMAIN_SECURITY_WHITELIST`
+environment variables. Be sure to also set the `DOMAIN_SECURITY` environment
+variable to `on` to enable the security check.
+
+You can also use Domain Security tokens to automatically authorize Free Progress
+on new domains as you add them. To do this, perform the following steps:
 
 1. the `DOMAIN_SECURITY` environment variable must be set to `on`, and the
    `DOMAIN_SECURITY_TOKEN` should be set to an arbitrary string that must be
@@ -340,6 +349,15 @@ FreeProgress.convert();     // tell Free Progress that the user "converted"
 
 **NOTE:** Whatever user action you decide is a "conversion" is completely up to
 you. Free Progress doesn't know or care, so you'll have to call this manually.
+
+
+#### Overriding the sharing url
+
+By default, the Free Progress Client will share the URL of the page it is loaded
+on. You can override this default behavior and share another page instead.
+Simply add this meta tag:
+
+`<meta name="freeprogress:pageurl" content="http://www.example.com/webpage" />`
 
 
 ### Using the Free Progress Admin

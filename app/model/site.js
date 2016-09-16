@@ -117,6 +117,15 @@ var _init = function(baseModel) {
           if (model._util.config.domain_security != 'on')
             return callback();
 
+          if (model._util.config.domain_security_whitelist) {
+            okDomain = model._util.config.domain_security_whitelist.split(',');
+
+            for (var i=0; i<okDomain.length; i++) {
+              if (url.host.trim().toLowerCase == okDomain[i].trim.toLowerCase())
+                return callback();
+            }
+          }
+
           var securityToken = model._util.config.domain_security_token.trim(),
               sanitizedHost = url.host.trim().toLowerCase(),
               tokenConcat   = securityToken + sanitizedHost,

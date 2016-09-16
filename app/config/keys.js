@@ -37,6 +37,7 @@ module.exports = {
     test_viability_threshold: parseInt(env.get('test').viability_threshold),
     domain_security: env.get('domain').security,
     domain_security_token: env.get('domain').security_token,
+    domain_security_whitelist: env.get('domain').security_whitelist,
     alerts_sending: env.get('alerts').sending,
     alerts_admin_email: env.get('alerts').admin_email,
     sendgrid_api_key: env.get('sendgrid').api_key,
