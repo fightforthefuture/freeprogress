@@ -121,7 +121,7 @@ var _init = function(baseModel) {
             okDomain = model._util.config.domain_security_whitelist.split(',');
 
             for (var i=0; i<okDomain.length; i++) {
-              if (url.host.trim().toLowerCase() == okDomain[i].trim.toLowerCase())
+              if (url.host.trim().toLowerCase() == okDomain[i].trim().toLowerCase())
                 return callback();
             }
           }
