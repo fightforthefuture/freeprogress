@@ -41,7 +41,7 @@ methods.saveVariationTW = function(req, res) {
 }
 
 methods.deleteVariationTW = function(req, res) {
-  _baseSaveVariation(req, res, model.VariationTW);
+  _baseDeleteVariation(req, res, model.VariationTW);
 }
 
 methods.shareVariationTW = function(req, res) {
