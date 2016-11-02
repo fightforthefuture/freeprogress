@@ -94,7 +94,8 @@ var _init = function(baseModel) {
             var diceRoll  = Math.floor((Math.random() * variations.length));
 
             callback({
-              url: baseUrl + '/' + variations[diceRoll].shortcode
+              url: baseUrl + '/' + variations[diceRoll].shortcode,
+              id: variations[diceRoll].id
             });
           });
         },
@@ -211,7 +212,8 @@ var _init = function(baseModel) {
 
             callback({
               url: baseUrl + '/' + variations[diceRoll].shortcode,
-              tweet_text: variations[diceRoll].tweet_text
+              tweet_text: variations[diceRoll].tweet_text,
+              id: variations[diceRoll].id
             });
           });
         },
