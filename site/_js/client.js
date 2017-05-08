@@ -45,20 +45,18 @@ var FreeProgress = {
         false);
   },
 
-  onDomContentLoaded:function() {
-    var fb = document.querySelectorAll('button.facebook, a.facebook');
-    for (var i = 0; i < fb.length; i++)
-      fb[i].addEventListener('click', function(e) {
-        e.preventDefault();
-        this.share();
-      }.bind(this), false);
-
-    var tw = document.querySelectorAll('button.twitter, a.twitter');
-    for (var i = 0; i < tw.length; i++)
-      tw[i].addEventListener('click', function(e) {
-        e.preventDefault();
-        this.tweet();
-      }.bind(this), false);
+  onDomContentLoaded: function() {
+    document.addEventListener('click', function(e) {
+      if (e.currentTarget.tagName == 'BUTTON' || e.currentTarget.tagName == 'A') {
+        if (e.currentTarget.classList.contains('facebook')) {
+          e.preventDefault();
+          this.share();
+        } else if (e.currentTarget.classList.contains('twitter')) {
+          e.preventDefault();
+          this.tweet();
+        }
+      }
+    }.bind(this), false);
   },
 
   share: function() {
