@@ -1,0 +1,130 @@
+{
+  "name": "freeprogress",
+  "description": "This lets us A/B test on sharing text.",
+  "repository": "https://github.com/fightforthefuture/freeprogress",
+  "env": {
+    "ACTIONNETWORK_API_KEY": {
+      "required": true
+    },
+    "ACTIONNETWORK_INTEGRATION": {
+      "required": true
+    },
+    "ACTIONNETWORK_LESS_EMAILS_TAG": {
+      "required": true
+    },
+    "ADMIN_PASSWORD": {
+      "required": true
+    },
+    "ADMIN_USERNAME": {
+      "required": true
+    },
+    "ALERTS": {
+      "required": true
+    },
+    "ALERTS_ADMIN_EMAIL": {
+      "required": true
+    },
+    "ALERTS_SENDING": {
+      "required": true
+    },
+    "AWS_ACCESS_KEY": {
+      "required": true
+    },
+    "AWS_S3_BUCKET": {
+      "required": true
+    },
+    "AWS_S3_FOLDER": {
+      "required": true
+    },
+    "AWS_SECRET_KEY": {
+      "required": true
+    },
+    "DB_HOST": {
+      "required": true
+    },
+    "DB_NAME": {
+      "required": true
+    },
+    "DB_PASS": {
+      "required": true
+    },
+    "DB_PORT": {
+      "required": true
+    },
+    "DB_PREFIX": {
+      "required": true
+    },
+    "DB_USER": {
+      "required": true
+    },
+    "DOMAIN_SECURITY": {
+      "required": true
+    },
+    "DOMAIN_SECURITY_TOKEN": {
+      "required": true
+    },
+    "DOMAIN_SECURITY_WHITELIST": {
+      "required": true
+    },
+    "EMAIL_FROM_ADDRESS": {
+      "required": true
+    },
+    "EMAIL_FROM_NAME": {
+      "required": true
+    },
+    "EMAIL_SCHEDULER": {
+      "required": true
+    },
+    "EMAIL_UNSUBSCRIBE_URL": {
+      "required": true
+    },
+    "LANG": {
+      "required": true
+    },
+    "SENDGRID_API_KEY": {
+      "required": true
+    },
+    "SESSION_SECRET": {
+      "generator": "secret"
+    },
+    "SPARKPOST_API_KEY": {
+      "required": true
+    },
+    "TEST_VIABILITY_THRESHOLD": {
+      "required": true
+    },
+    "TWITTER_ACCOUNT_ID": {
+      "required": true
+    },
+    "TWITTER_USERNAME": {
+      "required": true
+    },
+    "URL": {
+      "required": true
+    }
+  },
+  },
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-2x"
+    }
+  },
+  "addons": [
+    "papertrail",
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "9.6"
+      }
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/ruby"
+    }
+  ]
+}
