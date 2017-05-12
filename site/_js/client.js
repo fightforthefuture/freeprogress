@@ -49,12 +49,11 @@ var FreeProgress = {
     document.addEventListener('click', function(e) {
       e.preventDefault();
       console.log(e);
-      debugger;
-      if (e.currentTarget.tagName == 'BUTTON' || e.currentTarget.tagName == 'A') {
-        if (e.currentTarget.classList.contains('facebook')) {
+      if (e.target.tagName == 'BUTTON' || e.target.tagName == 'A') {
+        if (e.target.classList.contains('facebook')) {
           e.preventDefault();
           this.share();
-        } else if (e.currentTarget.classList.contains('twitter')) {
+        } else if (e.target.classList.contains('twitter')) {
           e.preventDefault();
           this.tweet();
         }
