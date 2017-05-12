@@ -46,8 +46,9 @@ var FreeProgress = {
   },
 
   onDomContentLoaded: function() {
-    document.body.addEventListener('click', function(e) {
+    document.addEventListener('click', function(e) {
       e.preventDefault();
+      console.log(e);
       debugger;
       if (e.currentTarget.tagName == 'BUTTON' || e.currentTarget.tagName == 'A') {
         if (e.currentTarget.classList.contains('facebook')) {
