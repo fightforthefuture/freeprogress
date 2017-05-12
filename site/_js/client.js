@@ -45,20 +45,35 @@ var FreeProgress = {
         false);
   },
 
-  onDomContentLoaded:function() {
-    var fb = document.querySelectorAll('button.facebook, a.facebook');
-    for (var i = 0; i < fb.length; i++)
-      fb[i].addEventListener('click', function(e) {
-        e.preventDefault();
-        this.share();
-      }.bind(this), false);
+  onDomContentLoaded: function() {
+    // Polyfill matches selector
+    function matches(el, selector) {
+      var matchesSelector = el.matches || el.webkitMatchesSelector ||
+        el.mozMatchesSelector || el.msMatchesSelector || el.oMatchesSelector ||
+        function(selector) {
+          var matches = document.querySelectorAll(selector);
+          while (matches[i] && matches[i] !== element) { i++; }
+          return matches[i] ? true : false;
+        };
 
-    var tw = document.querySelectorAll('button.twitter, a.twitter');
-    for (var i = 0; i < tw.length; i++)
-      tw[i].addEventListener('click', function(e) {
-        e.preventDefault();
-        this.tweet();
-      }.bind(this), false);
+      return matchesSelector.call(el, selector); 
+    }
+
+    document.addEventListener('click', function(e) {
+      var el = e.target;
+
+      while (el && el !== document) {
+        if (matches(el, 'a.facebook, button.facebook')) {
+          e.preventDefault();
+          this.share();
+        } else if (matches(el, 'a.twitter, button.twitter')) {
+          e.preventDefault();
+          this.tweet();
+        }
+
+        el = el.parentNode;
+      }
+    }.bind(this), false);
   },
 
   share: function() {
