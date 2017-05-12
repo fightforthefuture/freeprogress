@@ -47,15 +47,28 @@ var FreeProgress = {
 
   onDomContentLoaded: function() {
     document.addEventListener('click', function(e) {
-      e.preventDefault();
-      console.log(e);
-      if (e.target.tagName == 'BUTTON' || e.target.tagName == 'A') {
-        if (e.target.classList.contains('facebook')) {
-          e.preventDefault();
-          this.share();
-        } else if (e.target.classList.contains('twitter')) {
-          e.preventDefault();
-          this.tweet();
+      var targets = document.querySelectorAll('a.facebook, button.facebook, a.twitter, button.twitter');
+
+      var el = e.target;
+      var p;
+
+      for (var i = 0; i < targets.length; i++) {
+        p = possibleTargets[i];
+
+        while (el && el !== document) {
+          if (el === p) {
+            e.preventDefault();
+
+            if (p.classList.contains('facebook')) {
+              this.share();
+            } else if (p.classList.contains('twitter')) {
+              this.tweet();
+            }
+
+            return fn.call(p, e);
+          }
+
+          el = el.parentNode;
         }
       }
     }.bind(this), false);
