@@ -46,7 +46,7 @@ var FreeProgress = {
   },
 
   onDomContentLoaded: function() {
-    document.addEventListener('click', function(e) {
+    document.body.addEventListener('click', function(e) {
       e.preventDefault();
       debugger;
       if (e.currentTarget.tagName == 'BUTTON' || e.currentTarget.tagName == 'A') {
