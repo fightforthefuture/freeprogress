@@ -53,7 +53,7 @@ var FreeProgress = {
       var p;
 
       for (var i = 0; i < targets.length; i++) {
-        p = possibleTargets[i];
+        p = targets[i];
 
         while (el && el !== document) {
           if (el === p) {
