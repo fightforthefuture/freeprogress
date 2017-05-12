@@ -46,30 +46,32 @@ var FreeProgress = {
   },
 
   onDomContentLoaded: function() {
+    // Polyfill matches selector
+    function matches(el, selector) {
+      var matchesSelector = el.matches || el.webkitMatchesSelector ||
+        el.mozMatchesSelector || el.msMatchesSelector || el.oMatchesSelector ||
+        function(selector) {
+          var matches = document.querySelectorAll(selector);
+          while (matches[i] && matches[i] !== element) { i++; }
+          return matches[i] ? true : false;
+        };
+
+      return matchesSelector.call(el, selector); 
+    }
+
     document.addEventListener('click', function(e) {
-      var targets = document.querySelectorAll('a.facebook, button.facebook, a.twitter, button.twitter');
-
       var el = e.target;
-      var p;
 
-      for (var i = 0; i < targets.length; i++) {
-        p = targets[i];
-
-        while (el && el !== document) {
-          if (el === p) {
-            e.preventDefault();
-
-            if (p.classList.contains('facebook')) {
-              this.share();
-            } else if (p.classList.contains('twitter')) {
-              this.tweet();
-            }
-
-            return fn.call(p, e);
-          }
-
-          el = el.parentNode;
+      while (el && el !== document) {
+        if (matches(el, 'a.facebook, button.facebook')) {
+          e.preventDefault();
+          this.share();
+        } else if (matches(el, 'a.twitter, button.twitter')) {
+          e.preventDefault();
+          this.tweet();
         }
+
+        el = el.parentNode;
       }
     }.bind(this), false);
   },
