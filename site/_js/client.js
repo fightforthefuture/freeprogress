@@ -29,20 +29,11 @@ var FreeProgress = {
     xhr.open("get", this.apiUrl+'/tests?url='+testUrl, true);
     xhr.send();
 
-    if (
-      document.readyState == "complete"
-      ||
-      document.readyState == "loaded"
-      ||
-      document.readyState == "interactive"
-    )
+    if (document.readyState === 'complete' || document.readyState === 'loaded' || document.readyState === 'interactive') {
       this.onDomContentLoaded();
-
-    else if (document.addEventListener)
-      document.addEventListener(
-        'DOMContentLoaded',
-        this.onDomContentLoaded.bind(this),
-        false);
+    } else if (document.addEventListener) {
+      document.addEventListener('DOMContentLoaded', this.onDomContentLoaded.bind(this), false);
+    }
   },
 
   onDomContentLoaded: function() {
@@ -85,9 +76,9 @@ var FreeProgress = {
       var xhr = new XMLHttpRequest();
       xhr.open("post", this.data.variation_fb.url, true);
       xhr.send();
-    } else
-      var fbUrl = window.location.protocol + '//' + window.location.host
-                + window.location.pathname;
+    } else {
+      var fbUrl = window.location.protocol + '//' + window.location.host + window.location.pathname;
+    }
 
     var url = baseUrl + encodeURIComponent(fbUrl);
     var properties = 'width=500, height=300, toolbar=no, status=no, menubar=no';
@@ -113,6 +104,7 @@ var FreeProgress = {
 
       tweet = (tweet ? tweet.content : '') + ' ' + url;
     }
+
     url = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(tweet);
     properties = 'width=500, height=300, toolbar=no, status=no, menubar=no';
 
@@ -120,8 +112,7 @@ var FreeProgress = {
   },
 
   convert: function() {
-    var
-      i,
+    var i,
       pairs,
       queryObject = {},
       queryString = window.location.search;
