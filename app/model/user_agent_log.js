@@ -9,8 +9,7 @@ var _init = function(baseModel) {
   var UserAgentLog = baseModel._sequelize.define('site',
     {
       user_agent: {
-        type: Sequelize.STRING,
-        unique: true
+        type: Sequelize.STRING
       },
       create_date: {
         type: Sequelize.DATE,
