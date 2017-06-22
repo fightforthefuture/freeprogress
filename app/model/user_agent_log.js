@@ -10,7 +10,7 @@ var _init = function(baseModel) {
     {
       user_agent: {
         type: Sequelize.STRING,
-        unique: true
+        unique: false
       },
       create_date: {
         type: Sequelize.DATE,
